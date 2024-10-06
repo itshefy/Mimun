@@ -1,0 +1,48 @@
+.analyzer-container {
+  max-width: 600px;
+  margin: 0 auto;
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.input-group {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+input, select, button {
+  padding: 10px;
+  font-size: 16px;
+}
+
+button {
+  background-color: #007bff;
+  color: white;
+  border: none;
+  cursor: pointer;
+}
+
+button:hover {
+  background-color: #0056b3;
+}
+
+.analysis-result {
+  margin-top: 20px;
+  border: 1px solid #ddd;
+  padding: 15px;
+  background-color: #f9f9f9;
+}
+
+@media screen and (max-width: 600px) {
+  .analyzer-container {
+    width: 100%;
+    padding: 10px;
+  }
+  
+  input, select, button {
+    width: 100%;
+    margin-bottom: 10px;
+  }
+}
