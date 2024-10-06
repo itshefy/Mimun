@@ -1,4 +1,5 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import { jsPDF } from "jspdf";
 import './CarFinancingAnalyzer.css';
 
 const occupations = [
@@ -7,324 +8,349 @@ const occupations = [
   'אדריכל', 'עיתונאי', 'טייס', 'שוטר', 'מוזיקאי'
 ];
 
-const carTypes = ['ספורט', 'פנאי', 'שטח', 'פרייבט', 'מיני', 'ג\'יפ', 'משפחתי', 'יוקרה'];
+const carTypes = ['משפחתי', 'יוקרה', 'ספורט', 'שטח', 'מיני', 'חשמלי'];
 
-const occupationStyles = {
-  'עורך דין': { 
-    personality: 'אנליטי',
-    approach: 'פורמלי ומדויק',
-    carRecommendation: 'יוקרה',
-    nlpApproach: 'הצגת עובדות ונתונים מדויקים',
-    preferredAddress: 'עו"ד',
-    keyPoints: ['סטטוס', 'אמינות', 'בטיחות', 'טכנולוגיה מתקדמת'],
-    sellingStrategy: 'הדגש את היוקרה והסטטוס שהרכב מביא, תוך מתן נתונים מדויקים על ביצועים ובטיחות.'
+const personalityColors = {
+  'עורך דין': 'כחול', 'רופא': 'ירוק', 'מהנדס': 'כחול', 'מורה': 'ירוק',
+  'איש מכירות': 'אדום', 'אמן': 'צהוב', 'מנהל פרויקטים': 'אדום', 'יועץ פיננסי': 'כחול',
+  'פסיכולוג': 'ירוק', 'יזם': 'אדום', 'שף': 'צהוב', 'ספורטאי': 'אדום',
+  'מתכנת': 'כחול', 'מעצב גרפי': 'צהוב', 'חשבונאי': 'כחול', 'אדריכל': 'צהוב',
+  'עיתונאי': 'אדום', 'טייס': 'כחול', 'שוטר': 'ירוק', 'מוזיקאי': 'צהוב'
+};
+
+const carDatabase = {
+  'משפחתי': {
+    'חדש': ['סקודה אוקטביה', 'יונדאי i35', 'קיה סיד'],
+    'משומש': ['מאזדה 3', 'טויוטה קורולה', 'הונדה סיוויק']
   },
-  'רופא': { 
-    personality: 'אמפתי',
-    approach: 'מקצועי ואכפתי',
-    carRecommendation: 'פנאי',
-    nlpApproach: 'שימוש במטאפורות רפואיות',
-    preferredAddress: 'דוקטור',
-    keyPoints: ['בטיחות', 'נוחות', 'אמינות', 'טכנולוגיה רפואית מתקדמת'],
-    sellingStrategy: 'התמקד בבטיחות ובנוחות, השווה מערכות הרכב למערכות רפואיות מתקדמות.'
+  'יוקרה': {
+    'חדש': ['מרצדס E-Class', 'BMW סדרה 5', 'אאודי A6'],
+    'משומש': ['לקסוס IS', 'וולוו S60', 'ג\'גואר XE']
   },
-  'מהנדס': { 
-    personality: 'אנליטי',
-    approach: 'טכני ומדויק',
-    carRecommendation: 'ספורט',
-    nlpApproach: 'התמקדות בפרטים טכניים ויעילות',
-    preferredAddress: 'מהנדס',
-    keyPoints: ['חדשנות טכנולוגית', 'יעילות', 'ביצועים', 'תכנון מתקדם'],
-    sellingStrategy: 'הצג נתונים טכניים מפורטים, הדגש את החדשנות ההנדסית ברכב.'
+  'ספורט': {
+    'חדש': ['טויוטה סופרה', 'פורשה קאיין', 'אאודי TT'],
+    'משומש': ['מאזדה MX-5', 'סובארו BRZ', 'פורד מוסטנג']
   },
-  'מורה': {
-    personality: 'אמפתי',
-    approach: 'סבלני ומעודד',
-    carRecommendation: 'משפחתי',
-    nlpApproach: 'שימוש במטאפורות חינוכיות',
-    preferredAddress: 'מורה',
-    keyPoints: ['בטיחות משפחתית', 'מרחב', 'חסכוניות', 'נוחות'],
-    sellingStrategy: 'הדגש את התאמת הרכב לצרכי משפחה ולהובלת ציוד לבית הספר, התמקד בבטיחות ובנוחות.'
+  'שטח': {
+    'חדש': ['טויוטה לנד קרוזר', 'ג\'יפ רנגלר', 'סוזוקי ג\'ימני'],
+    'משומש': ['מיצובישי פאג\'רו', 'ניסאן פטרול', 'איסוזו D-Max']
   },
-  'איש מכירות': {
-    personality: 'נמרץ',
-    approach: 'תוסס ומשכנע',
-    carRecommendation: 'פרייבט',
-    nlpApproach: 'שימוש בשפה של הצלחה ומכירות',
-    preferredAddress: 'איש המכירות המצליח',
-    keyPoints: ['תדמית', 'נוחות בנסיעות ארוכות', 'חיסכון בדלק', 'טכנולוגיה חכמה'],
-    sellingStrategy: 'הדגש כיצד הרכב יכול לשפר את תדמית המכירות ולהגדיל את ההצלחה בעסקים.'
+  'מיני': {
+    'חדש': ['קיה פיקנטו', 'יונדאי i10', 'סוזוקי סוויפט'],
+    'משומש': ['פיאט 500', 'טויוטה יאריס', 'סיטרואן C1']
   },
-  'אמן': {
-    personality: 'יצירתי',
-    approach: 'פתוח ומעורר השראה',
-    carRecommendation: 'מיני',
-    nlpApproach: 'שימוש בדימויים ומטאפורות אמנותיות',
-    preferredAddress: 'אמן',
-    keyPoints: ['עיצוב ייחודי', 'צבעים מיוחדים', 'התאמה אישית', 'חדשנות'],
-    sellingStrategy: 'הצג את הרכב כיצירת אמנות, הדגש אפשרויות התאמה אישית ועיצוב ייחודי.'
-  },
-  'מנהל פרויקטים': {
-    personality: 'אנליטי',
-    approach: 'מאורגן ויעיל',
-    carRecommendation: 'פנאי',
-    nlpApproach: 'שימוש במונחים של ניהול וארגון',
-    preferredAddress: 'מנהל',
-    keyPoints: ['יעילות', 'ארגון מרחב', 'טכנולוגיה חכמה', 'חיסכון בזמן'],
-    sellingStrategy: 'הדגש כיצד הרכב יכול לסייע בניהול זמן יעיל ובארגון משימות יומיומיות.'
-  },
-  'יועץ פיננסי': {
-    personality: 'אנליטי',
-    approach: 'מקצועי ומדויק',
-    carRecommendation: 'יוקרה',
-    nlpApproach: 'שימוש במונחים פיננסיים והשקעתיים',
-    preferredAddress: 'יועץ',
-    keyPoints: ['ערך לטווח ארוך', 'יעילות כלכלית', 'השקעה חכמה', 'סטטוס'],
-    sellingStrategy: 'הצג את הרכב כהשקעה חכמה, נתח את העלות מול התועלת ואת ערך השמירה לאורך זמן.'
-  },
-  'פסיכולוג': {
-    personality: 'אמפתי',
-    approach: 'מקשיב ותומך',
-    carRecommendation: 'פרייבט',
-    nlpApproach: 'שימוש במונחים רגשיים ופסיכולוגיים',
-    preferredAddress: 'דוקטור',
-    keyPoints: ['נוחות נפשית', 'הפחתת לחץ', 'אווירה רגועה', 'בטיחות'],
-    sellingStrategy: 'הדגש את היכולת של הרכב ליצור סביבה רגועה ונוחה, התמקד בתכונות המפחיתות לחץ.'
-  },
-  'יזם': {
-    personality: 'נמרץ',
-    approach: 'חדשני ונועז',
-    carRecommendation: 'ספורט',
-    nlpApproach: 'שימוש במונחים של חדשנות והצלחה',
-    preferredAddress: 'יזם',
-    keyPoints: ['חדשנות', 'טכנולוגיה מתקדמת', 'ביצועים גבוהים', 'תדמית'],
-    sellingStrategy: 'הצג את הרכב כסמל לחדשנות והצלחה, הדגש תכונות פורצות דרך וטכנולוגיות חדשניות.'
-  },
-  'שף': {
-    personality: 'יצירתי',
-    approach: 'תשוקתי ומדויק',
-    carRecommendation: 'פנאי',
-    nlpApproach: 'שימוש במטאפורות קולינריות',
-    preferredAddress: 'שף',
-    keyPoints: ['מרחב אחסון', 'נוחות', 'עיצוב פנים איכותי', 'יעילות'],
-    sellingStrategy: 'השווה את הרכב למטבח גורמה, הדגש את המרחב לציוד ואת היכולת להגיע בנוחות לאירועים ולשווקים.'
-  },
-  'ספורטאי': {
-    personality: 'נמרץ',
-    approach: 'אנרגטי ותחרותי',
-    carRecommendation: 'ספורט',
-    nlpApproach: 'שימוש במונחים ספורטיביים ותחרותיים',
-    preferredAddress: 'אלוף',
-    keyPoints: ['ביצועים גבוהים', 'זריזות', 'עיצוב אירודינמי', 'טכנולוגיה מתקדמת'],
-    sellingStrategy: 'הצג את הרכב כמכונת ביצועים, הדגש את היכולות הספורטיביות ואת ההתאמה לאורח חיים אתלטי.'
-  },
-  'מתכנת': {
-    personality: 'אנליטי',
-    approach: 'לוגי ומדויק',
-    carRecommendation: 'פרייבט',
-    nlpApproach: 'שימוש במונחים טכנולוגיים ולוגיים',
-    preferredAddress: 'מפתח',
-    keyPoints: ['טכנולוגיה חכמה', 'קישוריות', 'יעילות', 'חדשנות'],
-    sellingStrategy: 'התמקד במערכות הטכנולוגיות המתקדמות של הרכב, הדגש את הקישוריות ואת היכולות החכמות.'
-  },
-  'מעצב גרפי': {
-    personality: 'יצירתי',
-    approach: 'ויזואלי ואסתטי',
-    carRecommendation: 'מיני',
-    nlpApproach: 'שימוש בדימויים ומונחים ויזואליים',
-    preferredAddress: 'מעצב',
-    keyPoints: ['עיצוב ייחודי', 'צבעים מרהיבים', 'קווים נקיים', 'התאמה אישית'],
-    sellingStrategy: 'הצג את הרכב כיצירת אמנות ויזואלית, הדגש את העיצוב הייחודי ואת אפשרויות ההתאמה האישית.'
-  },
-  'חשבונאי': {
-    personality: 'אנליטי',
-    approach: 'מדויק וזהיר',
-    carRecommendation: 'פרייבט',
-    nlpApproach: 'שימוש במונחים פיננסיים וחשבונאיים',
-    preferredAddress: 'רואה חשבון',
-    keyPoints: ['יעילות כלכלית', 'חיסכון בדלק', 'עלות תחזוקה נמוכה', 'ערך שמירה גבוה'],
-    sellingStrategy: 'הצג ניתוח מפורט של עלויות ותועלות, הדגש את היעילות הכלכלית ואת החיסכון לטווח ארוך.'
-  },
-  'אדריכל': {
-    personality: 'יצירתי',
-    approach: 'חזוני ומדויק',
-    carRecommendation: 'יוקרה',
-    nlpApproach: 'שימוש במונחים ארכיטקטוניים ועיצוביים',
-    preferredAddress: 'אדריכל',
-    keyPoints: ['עיצוב מרשים', 'חללים מתוכננים היטב', 'חומרים איכותיים', 'חדשנות'],
-    sellingStrategy: 'הצג את הרכב כיצירת מופת ארכיטקטונית, התמקד בתכנון החללים ובאיכות החומרים.'
-  },
-  'עיתונאי': {
-    personality: 'נמרץ',
-    approach: 'סקרן ומתעניין',
-    carRecommendation: 'פנאי',
-    nlpApproach: 'שימוש בסיפורים ואנקדוטות',
-    preferredAddress: 'עיתונאי',
-    keyPoints: ['גמישות', 'נוחות בנסיעות ארוכות', 'טכנולוגיה מתקדמת', 'חיסכון בדלק'],
-    sellingStrategy: 'ספר סיפור על הרכב, הדגש את יכולתו לתמוך בעבודה העיתונאית ובנסיעות תכופות.'
-  },
-  'טייס': {
-    personality: 'אנליטי',
-    approach: 'מדויק ואחראי',
-    carRecommendation: 'יוקרה',
-    nlpApproach: 'שימוש במונחים אווירונאוטיים',
-    preferredAddress: 'קפטן',
-    keyPoints: ['טכנולוגיה מתקדמת', 'בטיחות', 'נוחות', 'ביצועים גבוהים'],
-sellingStrategy: 'השווה את מערכות הרכב למערכות בתא הטייס, הדגש את הבטיחות והטכנולוגיה המתקדמת.'
-  },
-  'שוטר': {
-    personality: 'נמרץ',
-    approach: 'סמכותי ואחראי',
-    carRecommendation: 'שטח',
-    nlpApproach: 'שימוש במונחים של אכיפת חוק ובטיחות',
-    preferredAddress: 'קצין',
-    keyPoints: ['אמינות', 'ביצועים בכל תנאי שטח', 'בטיחות מתקדמת', 'נוחות'],
-    sellingStrategy: 'הדגש את היכולת של הרכב לעמוד בדרישות התפקיד, התמקד באמינות ובביצועים בתנאי שטח.'
-  },
-  'מוזיקאי': {
-    personality: 'יצירתי',
-    approach: 'רגיש ואמנותי',
-    carRecommendation: 'מיני',
-    nlpApproach: 'שימוש במטאפורות מוזיקליות',
-    preferredAddress: 'אמן',
-    keyPoints: ['מערכת שמע איכותית', 'עיצוב ייחודי', 'נוחות בהובלת ציוד', 'חסכוניות'],
-    sellingStrategy: 'השווה את הרכב לכלי נגינה מושלם, הדגש את מערכת השמע ואת הנוחות בהובלת ציוד מוזיקלי.'
+  'חשמלי': {
+    'חדש': ['טסלה מודל 3', 'יונדאי איוניק 5', 'קיה EV6'],
+    'משומש': ['ניסאן ליף', 'רנו זואי', 'BMW i3']
   }
 };
 
-const topSellingCars2024 = {
-  'ספורט': ['טויוטה סופרה', 'פורד מוסטנג', 'מאזדה MX-5'],
-  'פנאי': ['קיה ספורטאז\'', 'יונדאי טוסון', 'סקודה קארוק'],
-  'שטח': ['טויוטה לנד קרוזר', 'ג\'יפ רנגלר', 'פורד ברונקו'],
-  'פרייבט': ['סקודה אוקטביה', 'טויוטה קורולה', 'יונדאי i30'],
-  'מיני': ['קיה פיקנטו', 'יונדאי i10', 'סוזוקי סוויפט'],
-  'ג\'יפ': ['טויוטה RAV4', 'קיה סורנטו', 'יונדאי סנטה פה'],
-  'משפחתי': ['קיה קארנס', 'פולקסווגן טוראן', 'סיאט אלהמברה'],
-  'יוקרה': ['מרצדס E-Class', 'BMW סדרה 5', 'אאודי A6']
+const getZodiacSign = (birthdate) => {
+  const date = new Date(birthdate);
+  const day = date.getDate();
+  const month = date.getMonth() + 1;
+  
+  if ((month === 3 && day >= 21) || (month === 4 && day <= 19)) return 'טלה';
+  if ((month === 4 && day >= 20) || (month === 5 && day <= 20)) return 'שור';
+  if ((month === 5 && day >= 21) || (month === 6 && day <= 20)) return 'תאומים';
+  if ((month === 6 && day >= 21) || (month === 7 && day <= 22)) return 'סרטן';
+  if ((month === 7 && day >= 23) || (month === 8 && day <= 22)) return 'אריה';
+  if ((month === 8 && day >= 23) || (month === 9 && day <= 22)) return 'בתולה';
+  if ((month === 9 && day >= 23) || (month === 10 && day <= 22)) return 'מאזניים';
+  if ((month === 10 && day >= 23) || (month === 11 && day <= 21)) return 'עקרב';
+  if ((month === 11 && day >= 22) || (month === 12 && day <= 21)) return 'קשת';
+  if ((month === 12 && day >= 22) || (month === 1 && day <= 19)) return 'גדי';
+  if ((month === 1 && day >= 20) || (month === 2 && day <= 18)) return 'דלי';
+  return 'דגים';
+};
+
+const getNumerologyValue = (name) => {
+  const letterValues = {
+    'א': 1, 'ב': 2, 'ג': 3, 'ד': 4, 'ה': 5, 'ו': 6, 'ז': 7, 'ח': 8, 'ט': 9,
+    'י': 10, 'כ': 20, 'ל': 30, 'מ': 40, 'נ': 50, 'ס': 60, 'ע': 70, 'פ': 80, 'צ': 90,
+    'ק': 100, 'ר': 200, 'ש': 300, 'ת': 400
+  };
+  
+  let total = 0;
+  for (let char of name) {
+    total += letterValues[char] || 0;
+  }
+  
+  while (total > 9) {
+    total = total.toString().split('').reduce((sum, digit) => sum + parseInt(digit), 0);
+  }
+  
+  return total;
+};
+
+const getPersonalityTraits = (color, zodiacSign, numerologyValue) => {
+  let traits = [];
+  
+  switch (color) {
+    case 'אדום':
+      traits.push('אנרגטי', 'שאפתן', 'תחרותי');
+      break;
+    case 'צהוב':
+      traits.push('יצירתי', 'אופטימי', 'חברותי');
+      break;
+    case 'ירוק':
+      traits.push('אמפתי', 'מסור', 'אחראי');
+      break;
+    case 'כחול':
+      traits.push('אנליטי', 'מדויק', 'אסטרטגי');
+      break;
+  }
+  
+  switch (zodiacSign) {
+    case 'טלה':
+    case 'אריה':
+    case 'קשת':
+      traits.push('מנהיג', 'נועז');
+      break;
+    case 'שור':
+    case 'בתולה':
+    case 'גדי':
+      traits.push('יציב', 'מעשי');
+      break;
+    case 'תאומים':
+    case 'מאזניים':
+    case 'דלי':
+      traits.push('חדשני', 'גמיש');
+      break;
+    case 'סרטן':
+    case 'עקרב':
+    case 'דגים':
+      traits.push('רגיש', 'אינטואיטיבי');
+      break;
+  }
+  
+  switch (numerologyValue) {
+    case 1:
+    case 9:
+      traits.push('עצמאי', 'יצירתי');
+      break;
+    case 2:
+    case 6:
+      traits.push('שיתופי', 'הרמוני');
+      break;
+    case 3:
+    case 5:
+      traits.push('תקשורתי', 'הרפתקני');
+      break;
+    case 4:
+    case 8:
+      traits.push('יציב', 'ארגוני');
+      break;
+    case 7:
+      traits.push('אנליטי', 'פילוסופי');
+      break;
+  }
+  
+  return [...new Set(traits)];
+};
+
+const getRecommendedCars = (carType, isNew, age) => {
+  const condition = isNew ? 'חדש' : 'משומש';
+  return carDatabase[carType][condition];
+};
+
+const generateScript = (firstName, lastName, birthdate, age, occupation, carType, isNew, personalityColor, zodiacSign, numerologyValue) => {
+  const personalityTraits = getPersonalityTraits(personalityColor, zodiacSign, numerologyValue);
+  const recommendedCars = getRecommendedCars(carType, isNew, age);
+  const ageGroup = age < 35 ? 'צעיר' : age < 55 ? 'בוגר' : 'מבוגר';
+  const carCondition = isNew ? 'חדש' : 'משומש באיכות גבוהה';
+
+  const getPersonalizedOpening = () => {
+    if (personalityTraits.includes('אנרגטי') || personalityTraits.includes('שאפתן')) {
+      return `היי ${firstName}, אני מתאר לעצמי שבתור ${occupation} ${ageGroup} ודינמי, אתה מחפש רכב שישקף את האנרגיה והשאיפות שלך. נכון?`;
+    } else if (personalityTraits.includes('יצירתי') || personalityTraits.includes('חדשני')) {
+      return `${firstName}, כ${occupation} יצירתי, אני בטוח שאתה מחפש רכב שיבטא את הייחודיות שלך. מה היית רוצה שהרכב שלך ישדר?`;
+    } else if (personalityTraits.includes('אמפתי') || personalityTraits.includes('מסור')) {
+      return `שלום ${firstName}, בתור ${occupation} שדואג לאחרים, אני מניח שבטיחות ונוחות הם ערכים חשובים עבורך ברכב. האם אני צודק?`;
+    } else {
+      return `שלום ${firstName}, בתור ${occupation} ${ageGroup}, מה הדברים החשובים ביותר עבורך כשאתה מחפש רכב ${carCondition}?`;
+    }
+  };
+
+  const getPersonalizedCarDescription = (car) => {
+    if (personalityTraits.includes('אנרגטי') || personalityTraits.includes('תחרותי')) {
+      return `ה${car} ידוע בביצועים המרשימים שלו ובתחושת הנהיגה הדינמית. זה בדיוק מה ש${occupation} כמוך צריך כדי להישאר בתנועה ולהגיע ליעדים שלו.`;
+    } else if (personalityTraits.includes('יציב') || personalityTraits.includes('מעשי')) {
+      return `ה${car} מציע אמינות יוצאת דופן וערך גבוה לאורך זמן. זה מתאים מאוד ל${occupation} שמחפש השקעה חכמה ויציבה.`;
+    } else if (personalityTraits.includes('חדשני') || personalityTraits.includes('גמיש')) {
+      return `ה${car} מצויד בטכנולוגיות החדשניות ביותר ומציע חוויית נהיגה מתקדמת. זה יכול להתאים מאוד ל${occupation} שתמיד מחפש את החידושים האחרונים.`;
+    } else {
+      return `ה${car} משלב נוחות, בטיחות וסטייל בחבילה אחת מרשימה. זה יכול להיות פתרון מצוין עבור ${occupation} ${ageGroup} כמוך.`;
+    }
+  };
+
+  const getFinancingBenefits = () => {
+    let benefits = `
+    ${firstName}, בתור ${occupation}, אני בטוח שאתה מבין את החשיבות של תכנון פיננסי חכם. הנה כמה אפשרויות מימון שיכולות להתאים לך:
+
+    1. פריסה גמישה: אנחנו מציעים פריסה של עד 100 תשלומים. `;
+    
+    if (personalityTraits.includes('אנליטי') || personalityTraits.includes('מדויק')) {
+      benefits += `זה יכול לאפשר לך לתכנן את התקציב שלך בצורה מדויקת ויעילה.`;
+    } else if (personalityTraits.includes('יצירתי') || personalityTraits.includes('גמיש')) {
+      benefits += `זה נותן לך את החופש להתאים את התשלומים לסגנון החיים הדינמי שלך.`;
+    } else {
+      benefits += `זה מאפשר לך ליהנות מהרכב תוך שמירה על תזרים מזומנים נוח.`;
+    }
+
+    benefits += `
+
+    2. אפשרות לדחיית תשלומים: אתה יכול לדחות את שלושת התשלומים הראשונים. `;
+    
+if (personalityTraits.includes('שאפתן') || personalityTraits.includes('יזם')) {
+      benefits += `זה יכול לתת לך את הזמן להשקיע בעסק שלך ולהגדיל את ההכנסות לפני שמתחילים התשלומים.`;
+    } else if (personalityTraits.includes('מעשי') || personalityTraits.includes('זהיר')) {
+      benefits += `זה מאפשר לך להתארגן כלכלית ולתכנן את התקציב שלך בצורה מושכלת.`;
+    } else {
+      benefits += `זה נותן לך זמן להתרגל לרכב החדש ולהתארגן מבחינה כלכלית.`;
+    }
+
+    benefits += `
+
+    3. אפשרות לפירעון מוקדם: אתה יכול לפרוע את ההלוואה בכל שלב. `;
+    
+    if (personalityTraits.includes('אנליטי') || personalityTraits.includes('אסטרטגי')) {
+      benefits += `זה מאפשר לך לנצל הזדמנויות פיננסיות כשהן מגיעות ולחסוך בריבית.`;
+    } else if (personalityTraits.includes('גמיש') || personalityTraits.includes('ספונטני')) {
+      benefits += `זה נותן לך את החופש לשנות את התוכניות שלך בהתאם להתפתחויות בחיים.`;
+    } else {
+      benefits += `זה מעניק לך שקט נפשי, כי אתה יודע שיש לך אפשרות לסיים את ההלוואה מתי שתרצה.`;
+    }
+
+    benefits += `
+
+    4. ליווי אישי: הצוות שלנו ילווה אותך לאורך כל התהליך. `;
+    
+    if (personalityTraits.includes('אמפתי') || personalityTraits.includes('חברותי')) {
+      benefits += `אנחנו מאמינים ביצירת קשר אישי ובהבנת הצרכים הייחודיים של כל לקוח.`;
+    } else if (personalityTraits.includes('עצמאי') || personalityTraits.includes('ביקורתי')) {
+      benefits += `אנחנו כאן לספק לך את כל המידע שתצטרך כדי לקבל החלטה מושכלת.`;
+    } else {
+      benefits += `זה מבטיח שתקבל את התמיכה והמידע הנחוצים בכל שלב בדרך.`;
+    }
+
+    benefits += `
+
+    5. אפשרות Trade-in: אם יש לך רכב ישן, אנחנו יכולים להציע לך עסקת החלפה. `;
+    
+    if (personalityTraits.includes('יעיל') || personalityTraits.includes('מעשי')) {
+      benefits += `זה יכול לפשט את כל התהליך ולחסוך לך זמן וטרחה.`;
+    } else if (personalityTraits.includes('חדשני') || personalityTraits.includes('סקרן')) {
+      benefits += `זו דרך מצוינת לשדרג את הרכב שלך לדגם חדש יותר עם טכנולוגיה מתקדמת.`;
+    } else {
+      benefits += `זו אפשרות נהדרת להקל על המעבר לרכב החדש שלך.`;
+    }
+
+    benefits += `
+
+    ${firstName}, איך כל זה נשמע לך? האם יש אפשרות מימון ספציפית שמעניינת אותך במיוחד?`;
+
+    return benefits;
+  };
+
+  const getPersonalizedClosing = () => {
+    if (personalityTraits.includes('שאפתן') || personalityTraits.includes('תחרותי')) {
+      return `${firstName}, כ${occupation} מצליח, אתה יודע שהזדמנויות טובות לא מחכות לאף אחד. מה דעתך שניפגש היום ונתחיל להניע את התהליך? זה יכול להיות הצעד הראשון לקראת השגת הרכב שתמיד רצית.`;
+    } else if (personalityTraits.includes('אנליטי') || personalityTraits.includes('מדויק')) {
+      return `${firstName}, אני יודע שכ${occupation} אתה מעריך מידע מדויק ומקיף. בוא ניפגש היום, ואני אציג בפניך את כל הנתונים והמספרים שתצטרך כדי לקבל החלטה מושכלת. נוכל לעבור על כל הפרטים ביחד.`;
+    } else if (personalityTraits.includes('רגיש') || personalityTraits.includes('אינטואיטיבי')) {
+      return `${firstName}, אני מרגיש שיש כאן התאמה טובה בשבילך. כ${occupation}, אתה יודע להקשיב לאינטואיציה שלך. למה שלא תבוא היום לסוכנות, תיגע, תרגיש ותחווה את הרכב באופן אישי? אני בטוח שתרגיש את ההתאמה.`;
+    } else {
+      return `${firstName}, הצעד הבא הוא שלך. כ${occupation} ${ageGroup}, אתה יודע מה הכי טוב עבורך. מה דעתך לקפוץ אלינו היום? זו הזדמנות מצוינת לראות את הרכבים מקרוב ולהתחיל להגשים את החלום שלך. אנחנו כאן כדי לעזור לך למצוא את הרכב המושלם.`;
+    }
+  };
+
+  return `
+  ${getPersonalizedOpening()}
+
+  ${firstName}, בהתחשב בניסיון שלך כ${occupation} ${ageGroup} ובסגנון החיים שלך, אני חושב שה${recommendedCars[0]} ${carCondition} יכול להיות התאמה מעולה עבורך.
+  ${getPersonalizedCarDescription(recommendedCars[0])}
+
+  כמובן, יש לנו גם את ה${recommendedCars[1]} וה${recommendedCars[2]} שהם אפשרויות נהדרות. 
+  ${getPersonalizedCarDescription(recommendedCars[1])}
+  ${getPersonalizedCarDescription(recommendedCars[2])}
+
+  כל אחד מהרכבים האלה יכול להתאים לסגנון החיים הייחודי שלך כ${occupation}:
+
+  1. ה${recommendedCars[0]} מצטיין ב${personalityTraits[0]} ו${personalityTraits[1]}. זה יכול להתאים מאוד לאופי ה${personalityTraits[2]} שלך.
+  2. ה${recommendedCars[1]} ידוע ב${personalityTraits[3]} שלו. זה יכול לתמוך ב${occupation} ${ageGroup} כמוך בדרכים מפתיעות.
+  3. ה${recommendedCars[2]} מציע פתרונות ${personalityTraits[4]}. זה יכול להתאים מאוד לצרכים הייחודיים שלך כ${occupation}.
+
+  ${getFinancingBenefits()}
+
+  ${getPersonalizedClosing()}
+
+  אם זה נשמע לך טוב, אני יכול לתאם לך פגישה עם אחד המומחים שלנו עוד היום. יש לנו זמן פנוי ב-14:00 או ב-16:30. מה יותר נוח לך, ${firstName}?
+
+  אני כאן לכל שאלה או התלבטות. המטרה שלי היא לעזור לך למצוא את הרכב המושלם, בתנאים שמתאימים בדיוק לך כ${occupation} ${ageGroup}.
+  `;
 };
 
 const CarFinancingConversationAnalyzer = () => {
+  const [firstName, setFirstName] = useState('');
+  const [lastName, setLastName] = useState('');
+  const [birthdate, setBirthdate] = useState('');
   const [age, setAge] = useState('');
   const [occupation, setOccupation] = useState('');
   const [carType, setCarType] = useState('');
-  const [childrenUnder18, setChildrenUnder18] = useState('');
-  const [salary, setSalary] = useState('');
-  const [creditScore, setCreditScore] = useState('');
-  const [drivingExperience, setDrivingExperience] = useState('');
+  const [isNew, setIsNew] = useState(true);
   const [analysis, setAnalysis] = useState(null);
 
-  const getPersonalizedOpening = (style, occupation) => {
-    switch (style.personality) {
-      case 'אנליטי':
-        return `${style.preferredAddress}, בוא נבחן את הנתונים. כ${occupation} מצליח, אתה בוודאי מעריך מידע מדויק ומפורט. האם תסכים איתי שבחירת רכב היא החלטה שדורשת ניתוח מעמיק?`;
-      case 'אמפתי':
-        return `${style.preferredAddress}, איך אתה מרגיש היום? כ${occupation}, אני בטוח שאתה מבין את החשיבות של תחושה נוחה ובטוחה. האם תסכים איתי שהרכב שלך צריך לתת לך תחושה כזו?`;
-      case 'נמרץ':
-        return `היי ${style.preferredAddress}! מוכן להתרגש? כ${occupation} דינמי, אתה בוודאי מחפש רכב שיתאים לקצב החיים המהיר שלך. האם אתה מסכים שהרכב שלך צריך להיות מרגש כמו החיים שלך?`;
-      case 'יצירתי':
-        return `${style.preferredAddress}, בוא נחשוב מחוץ לקופסה! כ${occupation} יצירתי, אתה בוודאי מחפש רכב שיבטא את הייחודיות שלך. האם תסכים איתי שהרכב שלך צריך להיות יצירת אמנות על גלגלים?`;
-      default:
-        return `שלום ${style.preferredAddress}, נעים להכיר! כ${occupation}, אני בטוח שאתה מחפש רכב שיענה על הצרכים הייחודיים שלך. האם תסכים איתי שחשוב למצוא את ההתאמה המושלמת?`;
+  useEffect(() => {
+    if (birthdate) {
+      const today = new Date();
+      const birth = new Date(birthdate);
+      let calculatedAge = today.getFullYear() - birth.getFullYear();
+      const m = today.getMonth() - birth.getMonth();
+      if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+        calculatedAge--;
+      }
+      setAge(calculatedAge.toString());
     }
-  };
-
-  const getPersonalizedCarPresentation = (style, recommendedCars, carType) => {
-    const carFeatures = {
-      'ספורט': 'ביצועים מרשימים, עיצוב אווירודינמי, וטכנולוגיה מתקדמת',
-      'פנאי': 'נוחות מרבית, מרחב פנימי גדול, וצריכת דלק יעילה',
-      'שטח': 'יכולות off-road מרשימות, עמידות גבוהה, ומערכות בטיחות מתקדמות',
-      'פרייבט': 'אמינות גבוהה, נוחות נהיגה, וחסכוניות בצריכת דלק',
-      'מיני': 'קלות תמרון בעיר, חניה קלה, וחסכוניות מרבית',
-      'ג\'יפ': 'מרחב פנימי גדול, יכולות שטח, ותחושת ביטחון בנהיגה',
-      'משפחתי': 'מרחב גדול לכל המשפחה, בטיחות מתקדמת, ונוחות מקסימלית',
-      'יוקרה': 'פאר ויוקרה, טכנולוגיה חדשנית, וביצועים יוצאי דופן'
-    };
-
-    return `
-      בהתחשב בצרכים הייחודיים שלך כ${style.preferredAddress}, הייתי ממליץ על רכב ${carType}. 
-      הנה שלושה מודלים מובילים שאני חושב שיתאימו לך במיוחד:
-
-      1. ${recommendedCars[0]}
-      2. ${recommendedCars[1]}
-      3. ${recommendedCars[2]}
-
-      כל אחד מהרכבים האלה מציע ${carFeatures[carType]}. 
-      ${style.keyPoints.map(point => `ה${recommendedCars[0]} מצטיין במיוחד ב${point}, שאני יודע שחשוב לך כ${style.preferredAddress}.`).join(' ')}
-
-      האם אתה מסכים איתי שאלו תכונות שיכולות לשפר משמעותית את החוויה שלך כ${style.preferredAddress}?
-    `;
-  };
-
-  const getFinancingOptions = (salary, creditScore, occupation, style) => {
-    const maxMonthlyPayment = salary * 0.15;
-    const baseInterestRate = 6;
-    const creditScoreAdjustment = (creditScore - 650) / 100;
-    const adjustedInterestRate = Math.max(3, baseInterestRate - creditScoreAdjustment).toFixed(2);
-
-    return `
-      ${style.preferredAddress}, בהתחשב במשכורת שלך ובדירוג האשראי שלך, אני יכול להציע לך מסלול מימון אטרקטיבי במיוחד.
-
-      - תשלום חודשי מקסימלי: ${maxMonthlyPayment.toFixed(2)} ש"ח
-      - ריבית שנתית: ${adjustedInterestRate}%
-      - תקופת מימון: עד 84 חודשים
-
-      האם תסכים איתי ש${style.preferredAddress} מצליח כמוך ראוי לתנאי מימון מועדפים כאלה?
-
-      ${style.nlpApproach === 'שימוש במונחים פיננסיים והשקעתיים' ? 
-        `חשוב לציין שרכישת רכב כזה היא לא רק הוצאה, אלא גם השקעה בנוחות, יעילות, ותדמית מקצועית.` :
-        `מסלול זה מאפשר לך ליהנות מרכב חדש ואיכותי תוך שמירה על תזרים מזומנים יציב.`}
-    `;
-  };
-
-  const getPersonalizedClosing = (style) => {
-    switch (style.personality) {
-      case 'אנליטי':
-        return `${style.preferredAddress}, לאור כל הנתונים שהצגנו, האם אתה מסכים שהגיוני לקבוע פגישה היום כדי לבחון את האפשרויות מקרוב?`;
-      case 'אמפתי':
-        return `${style.preferredAddress}, אני מרגיש שמצאנו כאן התאמה מצוינת לצרכים שלך. האם תסכים איתי שכדאי לחוות את הרכב הזה באופן אישי עוד היום?`;
-      case 'נמרץ':
-        return `${style.preferredAddress}, אני יודע שאתה אדם של פעולה. האם אתה מסכים שהצעד הבא הוא לקפוץ לסוכנות עוד היום ולהרגיש את ההתרגשות בעצמך?`;
-      case 'יצירתי':
-        return `${style.preferredAddress}, דמיין את עצמך נוהג ברכב הזה כבר מחר. נשמע מרגש, נכון? אז למה לא להפוך את זה למציאות עוד היום?`;
-      default:
-        return `${style.preferredAddress}, לאור כל מה שדיברנו, האם אתה מסכים שהגיוני לקבוע פגישה היום כדי להתקדם לשלב הבא?`;
-    }
-  };
+  }, [birthdate]);
 
   const analyzeAndCreateScript = () => {
-    if (!occupation || !carType || !age || !salary || !creditScore || !drivingExperience) {
-      alert('נא למלא את כל השדות');
+    if (parseInt(age) < 18 || parseInt(age) > 80) {
+      alert('גיל חייב להיות בין 18 ל-80');
       return;
     }
 
-    const style = occupationStyles[occupation];
-    const ageGroup = age < 35 ? 'צעיר' : age < 55 ? 'בוגר' : 'מבוגר';
-    const numChildren = parseInt(childrenUnder18) || 0;
-    const recommendedSeats = numChildren + 2 <= 5 ? 5 : 7;
-    const recommendedCars = topSellingCars2024[carType];
+    const zodiacSign = getZodiacSign(birthdate);
+    const numerologyValue = getNumerologyValue(firstName + lastName);
+    const personalityColor = personalityColors[occupation];
+    
+    const script = generateScript(firstName, lastName, birthdate, parseInt(age), occupation, carType, isNew, personalityColor, zodiacSign, numerologyValue);
+    
+    setAnalysis({ style: personalityColor, conversationScript: script });
+  };
 
-    const conversationScript = `
-      ${getPersonalizedOpening(style, occupation)}
+  const resetForm = () => {
+    setFirstName('');
+    setLastName('');
+    setBirthdate('');
+    setAge('');
+    setOccupation('');
+    setCarType('');
+    setIsNew(true);
+    setAnalysis(null);
+  };
 
-      ${getPersonalizedCarPresentation(style, recommendedCars, carType)}
-
-      ${numChildren > 0 ? 
-        `כ${occupation} עם ${numChildren} ילדים, אתה בוודאי מבין את החשיבות של מרחב ובטיחות. האם תסכים איתי שרכב עם ${recommendedSeats} מושבים כמו ה${recommendedCars[0]} יהיה אידיאלי למשפחה שלך?` :
-        `כ${occupation} ${ageGroup}, אתה זקוק לרכב שמשלב ${style.keyPoints.join(', ')}. האם אתה מסכים שה${recommendedCars[0]} מציע את השילוב המושלם הזה?`
-      }
-
-      ${getFinancingOptions(salary, creditScore, occupation, style)}
-
-      בהתחשב בניסיון הנהיגה שלך של ${drivingExperience} שנים, אני בטוח שתעריך את ${style.keyPoints[0]} וה${style.keyPoints[1]} של ה${recommendedCars[0]}. האם אתה מסכים שאלו תכונות חשובות עבורך?
-
-      ${style.sellingStrategy}
-
-      ${getPersonalizedClosing(style)}
-
-      אני יכול לתאם לך פגישה עם אחד הנציגים הטובים ביותר שלנו עוד היום. האם 14:00 מתאים לך?
-    `;
-
-    setAnalysis({ style: style.approach, conversationScript });
+  const saveToPDF = () => {
+    const doc = new jsPDF();
+    doc.setFont("helvetica", "normal");
+    doc.setFontSize(12);
+    doc.setLanguage("he");
+    doc.setR2L(true);
+    
+    const lines = doc.splitTextToSize(analysis.conversationScript, 180);
+    doc.text(lines, 200, 10, { align: 'right' });
+    
+    doc.save("car_financing_script.pdf");
   };
 
   return (
@@ -332,10 +358,22 @@ const CarFinancingConversationAnalyzer = () => {
       <h1>מנתח שיחת מימון ומכירת רכב מתקדם</h1>
       <div className="input-group">
         <input 
-          type="number" 
-          placeholder="גיל" 
-          value={age} 
-          onChange={(e) => setAge(e.target.value)} 
+          type="text" 
+          placeholder="שם פרטי" 
+          value={firstName} 
+          onChange={(e) => setFirstName(e.target.value)} 
+        />
+        <input 
+          type="text" 
+          placeholder="שם משפחה" 
+          value={lastName} 
+          onChange={(e) => setLastName(e.target.value)} 
+        />
+        <input 
+          type="date" 
+          placeholder="תאריך לידה" 
+          value={birthdate} 
+          onChange={(e) => setBirthdate(e.target.value)} 
         />
         <select 
           value={occupation} 
@@ -351,30 +389,26 @@ const CarFinancingConversationAnalyzer = () => {
           <option value="">בחר סוג רכב</option>
           {carTypes.map(type => <option key={type} value={type}>{type}</option>)}
         </select>
-        <input 
-          type="number" 
-          placeholder="מספר ילדים מתחת לגיל 18" 
-          value={childrenUnder18} 
-          onChange={(e) => setChildrenUnder18(e.target.value)} 
-        />
-        <input 
-          type="number" 
-          placeholder="משכורת חודשית" 
-          value={salary} 
-          onChange={(e) => setSalary(e.target.value)} 
-        />
-        <input 
-          type="number" 
-          placeholder="דירוג אשראי" 
-          value={creditScore} 
-          onChange={(e) => setCreditScore(e.target.value)} 
-        />
-        <input 
-          type="number" 
-          placeholder="שנות ניסיון בנהיגה" 
-          value={drivingExperience} 
-          onChange={(e) => setDrivingExperience(e.target.value)} 
-        />
+        <div className="radio-group">
+          <label>
+            <input 
+              type="radio" 
+              value="new" 
+              checked={isNew} 
+              onChange={() => setIsNew(true)} 
+            />
+            רכב חדש
+          </label>
+          <label>
+            <input 
+              type="radio" 
+              value="used" 
+              checked={!isNew} 
+              onChange={() => setIsNew(false)} 
+            />
+            רכב משומש
+          </label>
+        </div>
       </div>
       <button onClick={analyzeAndCreateScript}>צור תסריט שיחה מתקדם</button>
       {analysis && (
@@ -383,12 +417,12 @@ const CarFinancingConversationAnalyzer = () => {
           <p>{analysis.style}</p>
           <h3>תסריט שיחה מפורט:</h3>
           <pre>{analysis.conversationScript}</pre>
+          <button onClick={saveToPDF}>שמור כ-PDF</button>
+          <button onClick={resetForm}>אפס טופס</button>
         </div>
       )}
     </div>
   );
 };
 
-
 export default CarFinancingConversationAnalyzer;
-
