@@ -22,7 +22,7 @@ h1 {
   margin-bottom: 20px;
 }
 
-input, select, .react-datepicker-wrapper {
+input, select {
   width: 100%;
   padding: 12px;
   font-size: 16px;
@@ -34,18 +34,6 @@ input, select, .react-datepicker-wrapper {
 input:focus, select:focus {
   outline: none;
   border-color: #4CAF50;
-}
-
-.react-datepicker-wrapper {
-  width: 100%;
-}
-
-.react-datepicker__input-container {
-  width: 100%;
-}
-
-.react-datepicker__input-container input {
-  width: 100%;
 }
 
 .radio-group {
@@ -161,9 +149,12 @@ ul {
     grid-template-columns: 1fr;
   }
 
-  input, select, button, .react-datepicker-wrapper {
-    font-size: 14px;
-    padding: 10px;
+  input, select, button {
+    font-size: 16px;
+    padding: 15px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
   }
 
   .radio-group {
@@ -187,37 +178,8 @@ ul {
   }
 
   pre {
-    font-size: 12px;
+    font-size: 14px;
   }
-}
-
-.main-car {
-  background-color: #e8f5e9;
-  padding: 15px;
-  border-radius: 4px;
-  margin-bottom: 20px;
-}
-
-.main-car h4 {
-  color: #2e7d32;
-  margin-top: 0;
-}
-
-.other-cars h4 {
-  margin-bottom: 15px;
-}
-
-.car-option ul {
-  margin-bottom: 0;
-}
-
-button {
-  margin-top: 10px;
-  margin-right: 10px;
-}
-
-button:last-child {
-  margin-right: 0;
 }
 
 input[list] {
@@ -227,103 +189,14 @@ input[list] {
   padding-left: 30px;
 }
 
-.radio-group input[type="radio"] {
-  -webkit-appearance: none;
-  -moz-appearance: none;
-  appearance: none;
-  display: inline-block;
-  width: 20px;
-  height: 20px;
-  padding: 3px;
-  background-clip: content-box;
-  border: 2px solid #bbbbbb;
-  background-color: #e7e6e7;
-  border-radius: 50%;
+/* Improved styling for datalist */
+input[list]::-webkit-calendar-picker-indicator {
+  display: none !important;
 }
 
-.radio-group input[type="radio"]:checked {
-  background-color: #4CAF50;
-}
-
-input:hover, select:hover, .radio-group label:hover {
-  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
-}
-
-button:hover {
-  box-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
-}
-
-.car-option {
-  transition: all 0.3s ease;
-}
-
-.car-option ul {
-  max-height: 0;
-  overflow: hidden;
-  transition: max-height 0.3s ease;
-}
-
-.car-option.expanded ul {
-  max-height: 500px;
-}
-
-pre {
-  font-family: 'Courier New', Courier, monospace;
-  background-color: #f8f8f8;
-  border: 1px solid #ddd;
-  color: #333;
-}
-
-@keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
-}
-
-.analysis-result {
-  animation: fadeIn 0.5s ease;
-}
-
-.car-option ul {
-  list-style-type: none;
-  padding-right: 0;
-}
-
-.car-option ul li {
-  padding: 5px 0;
-  border-bottom: 1px solid #eee;
-}
-
-.car-option ul li:last-child {
-  border-bottom: none;
-}
-
-/* Improved styling for DatePicker */
-.react-datepicker-wrapper {
-  display: block;
-  width: 100%;
-}
-
-.react-datepicker__input-container {
-  display: block;
-}
-
-.react-datepicker__input-container input {
-  width: 100%;
-  padding: 12px;
-  font-size: 16px;
-  border: 1px solid #ddd;
-  border-radius: 4px;
-  transition: border-color 0.3s ease;
-}
-
-.react-datepicker__input-container input:focus {
-  outline: none;
-  border-color: #4CAF50;
-}
-
-/* Styling for autocomplete */
-input[list] {
-  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+/* Custom styling for the birthdate input */
+input[type="text"][placeholder="תאריך לידה (DD/MM/YYYY)"] {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="4" width="18" height="18" rx="2" ry="2"></rect><line x1="16" y1="2" x2="16" y2="6"></line><line x1="8" y1="2" x2="8" y2="6"></line><line x1="3" y1="10" x2="21" y2="10"></line></svg>');
   background-repeat: no-repeat;
   background-position: left 10px center;
   padding-left: 30px;
@@ -432,39 +305,6 @@ button:focus:not(:active)::after {
   transform: rotate(90deg);
 }
 
-/* Responsive design improvements */
-@media (max-width: 600px) {
-  .analyzer-container {
-    padding: 10px;
-  }
-
-  h1 {
-    font-size: 20px;
-  }
-
-  input, select, .react-datepicker__input-container input {
-    font-size: 14px;
-    padding: 8px;
-  }
-
-  button {
-    font-size: 14px;
-    padding: 10px 15px;
-  }
-
-  .analysis-result pre {
-    font-size: 12px;
-  }
-
-  .car-recommendations {
-    padding: 10px;
-  }
-
-  .main-car, .other-cars {
-    padding: 10px;
-  }
-}
-
 /* Accessibility improvements */
 input:focus, select:focus, button:focus {
   outline: 2px solid #4CAF50;
@@ -495,5 +335,22 @@ input:focus, select:focus, button:focus {
 
   .analysis-result {
     page-break-inside: avoid;
+  }
+}
+
+/* Mobile-specific improvements */
+@media (max-width: 600px) {
+  input[list],
+  input[type="text"][placeholder="תאריך לידה (DD/MM/YYYY)"] {
+    background-position: left 15px center;
+    padding-left: 40px;
+  }
+
+  .car-option p {
+    font-size: 16px;
+  }
+
+  .car-option p::after {
+    font-size: 20px;
   }
 }

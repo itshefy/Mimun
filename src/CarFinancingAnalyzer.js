@@ -330,7 +330,7 @@ const generateScript = (firstName, lastName, age, occupation, carType, isNew) =>
 const CarFinancingConversationAnalyzer = () => {
   const [firstName, setFirstName] = useState('');
   const [lastName, setLastName] = useState('');
-  const [birthdate, setBirthdate] = useState(null);
+  const [birthdate, setBirthdate] = useState('');
   const [age, setAge] = useState('');
   const [occupation, setOccupation] = useState('');
   const [carType, setCarType] = useState('');
@@ -344,16 +344,27 @@ const CarFinancingConversationAnalyzer = () => {
 
   useEffect(() => {
     if (birthdate) {
-      const today = new Date();
-      const birth = new Date(birthdate);
-      let calculatedAge = today.getFullYear() - birth.getFullYear();
-      const m = today.getMonth() - birth.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
-        calculatedAge--;
+      const [day, month, year] = birthdate.split('/');
+      if (day && month && year) {
+        const birth = new Date(year, month - 1, day);
+        const today = new Date();
+        let calculatedAge = today.getFullYear() - birth.getFullYear();
+        const m = today.getMonth() - birth.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birth.getDate())) {
+          calculatedAge--;
+        }
+        setAge(calculatedAge.toString());
       }
-      setAge(calculatedAge.toString());
     }
   }, [birthdate]);
+
+  const handleBirthdateChange = (e) => {
+    let value = e.target.value.replace(/\D/g, '');
+    if (value.length > 8) value = value.slice(0, 8);
+    if (value.length > 4) value = `${value.slice(0, 2)}/${value.slice(2, 4)}/${value.slice(4)}`;
+    else if (value.length > 2) value = `${value.slice(0, 2)}/${value.slice(2)}`;
+    setBirthdate(value);
+  };
 
   const handleOccupationChange = (e) => {
     const value = e.target.value;
@@ -392,27 +403,26 @@ const CarFinancingConversationAnalyzer = () => {
     return Object.keys(errors).length === 0;
   };
 
-const analyzeAndCreateScript = async () => {
-  if (!validateForm()) return;
+  const analyzeAndCreateScript = async () => {
+    if (!validateForm()) return;
 
-  setIsLoading(true);
-  
-  // Simulating an asynchronous operation
-  await new Promise(resolve => setTimeout(resolve, 1500));
+    setIsLoading(true);
+    
+    // Simulating an asynchronous operation
+    await new Promise(resolve => setTimeout(resolve, 1500));
 
-  const script = generateScript(firstName, lastName, parseInt(age) || 30, occupation, carType, isNew);
-  
-  const personalityTraits = getPersonalityTraits(occupation);
-  const recommendedCars = getRecommendedCars(carType, isNew, personalityTraits);
-  
-  setAnalysis({ 
-    conversationScript: script,
-    mainCar: recommendedCars[0],
-    otherCars: recommendedCars.slice(1, 5)
-  });
+    const script = generateScript(firstName, lastName, parseInt(age) || 30, occupation, carType, isNew);
+    
+    const personalityTraits = getPersonalityTraits(occupation);
+    const recommendedCars = getRecommendedCars(carType, isNew, personalityTraits);
+    
+    setAnalysis({ 
+      conversationScript: script,
+      mainCar: recommendedCars[0],
+      otherCars: recommendedCars.slice(1, 5)
+    });
 
-  setIsLoading(false);
-};
+    setIsLoading(false);};
   const resetForm = () => {
     setFirstName('');
     setLastName('');
@@ -455,7 +465,7 @@ const analyzeAndCreateScript = async () => {
     }
   };
 
-  return (
+ return (
     <div className="analyzer-container">
       <h1>מנתח שיחת מימון ומכירת רכב מתקדם</h1>
       <div className="input-group">
@@ -479,17 +489,13 @@ const analyzeAndCreateScript = async () => {
         />
         {errors.lastName && <span className="error-message">{errors.lastName}</span>}
 
-        <DatePicker
-          selected={birthdate}
-          onChange={(date) => setBirthdate(date)}
-          dateFormat="dd/MM/yyyy"
-          showYearDropdown
-          scrollableYearDropdown
-          yearDropdownItemNumber={100}
-          placeholderText="תאריך לידה"
+        <input
+          type="text"
+          placeholder="תאריך לידה (DD/MM/YYYY)"
+          value={birthdate}
+          onChange={handleBirthdateChange}
+          onKeyPress={handleKeyPress}
           className={errors.birthdate ? 'error' : ''}
-          minDate={new Date(new Date().setFullYear(new Date().getFullYear() - 80))}
-          maxDate={new Date(new Date().setFullYear(new Date().getFullYear() - 18))}
         />
         {errors.birthdate && <span className="error-message">{errors.birthdate}</span>}
 
