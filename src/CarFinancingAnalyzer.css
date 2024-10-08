@@ -4,44 +4,64 @@
   padding: 20px;
   font-family: Arial, sans-serif;
   direction: rtl;
+  background-color: #f9f9f9;
+  border-radius: 10px;
+  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+}
+
+h1 {
+  text-align: center;
+  color: #333;
+  margin-bottom: 30px;
 }
 
 .input-group {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  gap: 15px;
   margin-bottom: 20px;
 }
 
-input, select, button {
-  padding: 10px;
+input, select {
+  padding: 12px;
   font-size: 16px;
-  width: 100%;
-  box-sizing: border-box;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+input:focus, select:focus {
+  outline: none;
+  border-color: #4CAF50;
 }
 
 .radio-group {
   display: flex;
   justify-content: space-around;
-  margin: 10px 0;
+  align-items: center;
+  background-color: #fff;
+  padding: 10px;
+  border-radius: 4px;
 }
 
 .radio-group label {
   display: flex;
   align-items: center;
+  cursor: pointer;
 }
 
 .radio-group input[type="radio"] {
   margin-left: 5px;
-  width: auto;
 }
 
 button {
   background-color: #4CAF50;
   color: white;
+  padding: 12px 20px;
+  font-size: 16px;
   border: none;
+  border-radius: 4px;
   cursor: pointer;
-  margin-top: 10px;
   transition: background-color 0.3s;
 }
 
@@ -50,30 +70,220 @@ button:hover {
 }
 
 .analysis-result {
-  background-color: #f2f2f2;
+  background-color: #fff;
   padding: 20px;
-  border-radius: 5px;
+  border-radius: 4px;
   margin-top: 20px;
+  box-shadow: 0 0 5px rgba(0,0,0,0.1);
 }
 
 pre {
   white-space: pre-wrap;
   word-wrap: break-word;
-  font-family: Arial, sans-serif;
+  background-color: #f1f1f1;
+  padding: 15px;
+  border-radius: 4px;
   font-size: 14px;
-  line-height: 1.5;
+  line-height: 1.6;
+}
+
+.car-recommendations {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 20px;
+  margin-top: 20px;
+}
+
+.main-car, .other-cars {
+  flex: 1;
+  min-width: 250px;
+}
+
+.car-option {
+  margin-bottom: 10px;
+  background-color: #f1f1f1;
+  padding: 10px;
+  border-radius: 4px;
+}
+
+.car-option p {
+  font-weight: bold;
+  margin: 0;
+  cursor: pointer;
+}
+
+ul {
+  padding-right: 20px;
+  margin-top: 10px;
 }
 
 @media (max-width: 600px) {
   .analyzer-container {
+    padding: 15px;
+  }
+
+  input,select, button {
+    font-size: 14px;
     padding: 10px;
   }
 
-  input, select, button {
-    font-size: 14px;
+  .car-recommendations {
+    flex-direction: column;
+  }
+
+  .main-car, .other-cars {
+    min-width: 100%;
+  }
+
+  h1 {
+    font-size: 24px;
   }
 
   pre {
     font-size: 12px;
   }
+}
+
+/* Additional styling improvements */
+.main-car {
+  background-color: #e8f5e9;
+  padding: 15px;
+  border-radius: 4px;
+  margin-bottom: 20px;
+}
+
+.main-car h4 {
+  color: #2e7d32;
+  margin-top: 0;
+}
+
+.other-cars h4 {
+  margin-bottom: 15px;
+}
+
+.car-option:hover {
+  background-color: #e8e8e8;
+}
+
+.car-option ul {
+  margin-bottom: 0;
+}
+
+button {
+  margin-top: 10px;
+  margin-right: 10px;
+}
+
+button:last-child {
+  margin-right: 0;
+}
+
+/* Styling for the occupation datalist */
+input[list] {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+  background-repeat: no-repeat;
+  background-position: right 10px center;
+  padding-right: 30px;
+}
+
+/* Improving the look of the radio buttons */
+.radio-group input[type="radio"] {
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  appearance: none;
+  display: inline-block;
+  width: 20px;
+  height: 20px;
+  padding: 3px;
+  background-clip: content-box;
+  border: 2px solid #bbbbbb;
+  background-color: #e7e6e7;
+  border-radius: 50%;
+}
+
+.radio-group input[type="radio"]:checked {
+  background-color: #4CAF50;
+}
+
+/* Hover effects for interactive elements */
+input:hover, select:hover, .radio-group label:hover {
+  box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+}
+
+button:hover {
+  box-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
+}
+
+/* Transition effects */
+.car-option {
+  transition: all 0.3s ease;
+}
+
+.car-option ul {
+  max-height: 0;
+  overflow: hidden;
+  transition: max-height 0.3s ease;
+}
+
+.car-option.expanded ul {
+  max-height: 500px; /* Adjust this value as needed */
+}
+
+/* Improving readability of the script */
+pre {
+  font-family: 'Courier New', Courier, monospace;
+  background-color: #f8f8f8;
+  border: 1px solid #ddd;
+  color: #333;
+}
+
+/* Adding some animations */
+@keyframes fadeIn {
+  from { opacity: 0; }
+  to { opacity: 1; }
+}
+
+.analysis-result {
+  animation: fadeIn 0.5s ease;
+}
+
+/* Improving the layout for larger screens */
+@media (min-width: 768px) {
+  .input-group {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 20px;
+  }
+
+  .radio-group {
+    grid-column: span 2;
+  }
+
+  button {
+    grid-column: span 2;
+  }
+}
+
+/* Make sure the datalist suggestions are styled properly */
+datalist {
+  display: none;
+}
+
+input::-webkit-calendar-picker-indicator {
+  display: none;
+}
+
+/* Style for the expanded car details */
+.car-option ul {
+  list-style-type: none;
+  padding-right: 0;
+}
+
+.car-option ul li {
+  padding: 5px 0;
+  border-bottom: 1px solid #eee;
+}
+
+.car-option ul li:last-child {
+  border-bottom: none;
 }
