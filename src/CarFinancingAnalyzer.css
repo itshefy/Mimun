@@ -16,13 +16,14 @@ h1 {
 }
 
 .input-group {
-  display: flex;
-  flex-direction: column;
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
   gap: 15px;
   margin-bottom: 20px;
 }
 
-input, select {
+input, select, .react-datepicker-wrapper {
+  width: 100%;
   padding: 12px;
   font-size: 16px;
   border: 1px solid #ddd;
@@ -35,7 +36,20 @@ input:focus, select:focus {
   border-color: #4CAF50;
 }
 
+.react-datepicker-wrapper {
+  width: 100%;
+}
+
+.react-datepicker__input-container {
+  width: 100%;
+}
+
+.react-datepicker__input-container input {
+  width: 100%;
+}
+
 .radio-group {
+  grid-column: span 2;
   display: flex;
   justify-content: space-around;
   align-items: center;
@@ -55,6 +69,7 @@ input:focus, select:focus {
 }
 
 button {
+  grid-column: span 2;
   background-color: #4CAF50;
   color: white;
   padding: 12px 20px;
@@ -67,6 +82,11 @@ button {
 
 button:hover {
   background-color: #45a049;
+}
+
+button:disabled {
+  background-color: #cccccc;
+  cursor: not-allowed;
 }
 
 .analysis-result {
@@ -104,6 +124,11 @@ pre {
   background-color: #f1f1f1;
   padding: 10px;
   border-radius: 4px;
+  transition: background-color 0.3s ease;
+}
+
+.car-option:hover {
+  background-color: #e8e8e8;
 }
 
 .car-option p {
@@ -117,14 +142,36 @@ ul {
   margin-top: 10px;
 }
 
+.error {
+  border-color: #ff6b6b;
+}
+
+.error-message {
+  color: #ff6b6b;
+  font-size: 12px;
+  margin-top: 5px;
+}
+
 @media (max-width: 600px) {
   .analyzer-container {
     padding: 15px;
   }
 
-  input,select, button {
+  .input-group {
+    grid-template-columns: 1fr;
+  }
+
+  input, select, button, .react-datepicker-wrapper {
     font-size: 14px;
     padding: 10px;
+  }
+
+  .radio-group {
+    grid-column: span 1;
+  }
+
+  button {
+    grid-column: span 1;
   }
 
   .car-recommendations {
@@ -144,7 +191,6 @@ ul {
   }
 }
 
-/* Additional styling improvements */
 .main-car {
   background-color: #e8f5e9;
   padding: 15px;
@@ -161,10 +207,6 @@ ul {
   margin-bottom: 15px;
 }
 
-.car-option:hover {
-  background-color: #e8e8e8;
-}
-
 .car-option ul {
   margin-bottom: 0;
 }
@@ -178,15 +220,13 @@ button:last-child {
   margin-right: 0;
 }
 
-/* Styling for the occupation datalist */
 input[list] {
   background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
   background-repeat: no-repeat;
-  background-position: right 10px center;
-  padding-right: 30px;
+  background-position: left 10px center;
+  padding-left: 30px;
 }
 
-/* Improving the look of the radio buttons */
 .radio-group input[type="radio"] {
   -webkit-appearance: none;
   -moz-appearance: none;
@@ -205,7 +245,6 @@ input[list] {
   background-color: #4CAF50;
 }
 
-/* Hover effects for interactive elements */
 input:hover, select:hover, .radio-group label:hover {
   box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
 }
@@ -214,7 +253,6 @@ button:hover {
   box-shadow: 0 0 10px rgba(76, 175, 80, 0.7);
 }
 
-/* Transition effects */
 .car-option {
   transition: all 0.3s ease;
 }
@@ -226,10 +264,9 @@ button:hover {
 }
 
 .car-option.expanded ul {
-  max-height: 500px; /* Adjust this value as needed */
+  max-height: 500px;
 }
 
-/* Improving readability of the script */
 pre {
   font-family: 'Courier New', Courier, monospace;
   background-color: #f8f8f8;
@@ -237,7 +274,6 @@ pre {
   color: #333;
 }
 
-/* Adding some animations */
 @keyframes fadeIn {
   from { opacity: 0; }
   to { opacity: 1; }
@@ -247,33 +283,6 @@ pre {
   animation: fadeIn 0.5s ease;
 }
 
-/* Improving the layout for larger screens */
-@media (min-width: 768px) {
-  .input-group {
-    display: grid;
-    grid-template-columns: repeat(2, 1fr);
-    gap: 20px;
-  }
-
-  .radio-group {
-    grid-column: span 2;
-  }
-
-  button {
-    grid-column: span 2;
-  }
-}
-
-/* Make sure the datalist suggestions are styled properly */
-datalist {
-  display: none;
-}
-
-input::-webkit-calendar-picker-indicator {
-  display: none;
-}
-
-/* Style for the expanded car details */
 .car-option ul {
   list-style-type: none;
   padding-right: 0;
@@ -286,4 +295,205 @@ input::-webkit-calendar-picker-indicator {
 
 .car-option ul li:last-child {
   border-bottom: none;
+}
+
+/* Improved styling for DatePicker */
+.react-datepicker-wrapper {
+  display: block;
+  width: 100%;
+}
+
+.react-datepicker__input-container {
+  display: block;
+}
+
+.react-datepicker__input-container input {
+  width: 100%;
+  padding: 12px;
+  font-size: 16px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  transition: border-color 0.3s ease;
+}
+
+.react-datepicker__input-container input:focus {
+  outline: none;
+  border-color: #4CAF50;
+}
+
+/* Styling for autocomplete */
+input[list] {
+  background-image: url('data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="6 9 12 15 18 9"></polyline></svg>');
+  background-repeat: no-repeat;
+  background-position: left 10px center;
+  padding-left: 30px;
+}
+
+/* Improved button styling */
+button {
+  transition: all 0.3s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+button:after {
+  content: '';
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 5px;
+  height: 5px;
+  background: rgba(255, 255, 255, .5);
+  opacity: 0;
+  border-radius: 100%;
+  transform: scale(1, 1) translate(-50%);
+  transform-origin: 50% 50%;
+}
+
+@keyframes ripple {
+  0% {
+    transform: scale(0, 0);
+    opacity: 1;
+  }
+  20% {
+    transform: scale(25, 25);
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: scale(40, 40);
+  }
+}
+
+button:focus:not(:active)::after {
+  animation: ripple 1s ease-out;
+}
+
+/* Improved styling for analysis result */
+.analysis-result {
+  transition: all 0.3s ease;
+}
+
+.analysis-result h3 {
+  color: #4CAF50;
+  border-bottom: 2px solid #4CAF50;
+  padding-bottom: 10px;
+  margin-top: 30px;
+}
+
+.analysis-result pre {
+  background-color: #f9f9f9;
+  border-left: 4px solid #4CAF50;
+  padding: 15px;
+  font-size: 14px;
+  line-height: 1.6;
+  overflow-x: auto;
+}
+
+/* Styling for car recommendations */
+.car-recommendations {
+  background-color: #f9f9f9;
+  border-radius: 4px;
+  padding: 20px;
+  margin-top: 20px;
+}
+
+.main-car, .other-cars {
+  background-color: #ffffff;
+  border-radius: 4px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.main-car h4, .other-cars h4 {
+  color: #4CAF50;
+  margin-top: 0;
+}
+
+.car-option {
+  border-left: 4px solid #4CAF50;
+  padding-left: 15px;
+  margin-bottom: 15px;
+}
+
+.car-option p {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
+
+.car-option p::after {
+  content: '►';
+  transition: transform 0.3s ease;
+}
+
+.car-option p.expanded::after {
+  transform: rotate(90deg);
+}
+
+/* Responsive design improvements */
+@media (max-width: 600px) {
+  .analyzer-container {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 20px;
+  }
+
+  input, select, .react-datepicker__input-container input {
+    font-size: 14px;
+    padding: 8px;
+  }
+
+  button {
+    font-size: 14px;
+    padding: 10px 15px;
+  }
+
+  .analysis-result pre {
+    font-size: 12px;
+  }
+
+  .car-recommendations {
+    padding: 10px;
+  }
+
+  .main-car, .other-cars {
+    padding: 10px;
+  }
+}
+
+/* Accessibility improvements */
+input:focus, select:focus, button:focus {
+  outline: 2px solid #4CAF50;
+  outline-offset: 2px;
+}
+
+.visually-hidden {
+  position: absolute !important;
+  height: 1px;
+  width: 1px;
+  overflow: hidden;
+  clip: rect(1px 1px 1px 1px);
+  clip: rect(1px, 1px, 1px, 1px);
+  white-space: nowrap;
+}
+
+/* Print styles */
+@media print {
+  .analyzer-container {
+    max-width: none;
+    margin: 0;
+    padding: 0;
+  }
+
+  button {
+    display: none;
+  }
+
+  .analysis-result {
+    page-break-inside: avoid;
+  }
 }
