@@ -59,29 +59,37 @@ select:focus {
   position: relative;
 }
 
-.occupation-suggestions {
+.occupation-input-container::after {
+  content: "הקלד לחיפוש";
   position: absolute;
-  top: 100%;
-  right: 0;
-  left: 0;
-  background-color: #fff;
-  border: 1px solid #3498db;
-  border-top: none;
-  border-radius: 0 0 5px 5px;
-  max-height: 150px;
-  overflow-y: auto;
-  z-index: 1000;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  right: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #999;
+  font-size: 12px;
+  pointer-events: none;
 }
 
-.occupation-suggestions li {
-  padding: 8px 10px;
-  cursor: pointer;
-  transition: background-color 0.3s;
+.occupation-input-container input:focus::after,
+.occupation-input-container input:not(:placeholder-shown)::after {
+  display: none;
 }
 
-.occupation-suggestions li:hover {
-  background-color: #ecf0f1;
+input[list] {
+  width: 100%;
+}
+
+datalist {
+  display: none;
+}
+
+select {
+  appearance: none;
+  background-image: url('data:image/svg+xml;utf8,<svg fill="%23333" height="24" viewBox="0 0 24 24" width="24" xmlns="http://www.w3.org/2000/svg"><path d="M7 10l5 5 5-5z"/></svg>');
+  background-repeat: no-repeat;
+  background-position: left 10px top 50%;
+  background-size: 20px auto;
+  padding-left: 40px;
 }
 
 .radio-group {
@@ -239,14 +247,27 @@ pre {
     padding: 10px;
   }
 
+  .occupation-input-container {
+    position: relative;
+    padding-bottom: 40px;
+  }
+
   .occupation-suggestions {
-    position: fixed;
-    top: auto;
-    bottom: 0;
+    position: absolute;
+    top: 100%;
     left: 0;
     right: 0;
-    max-height: 40vh;
-    border-radius: 10px 10px 0 0;
+    max-height: 150px;
+    overflow-y: auto;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+    scroll-snap-type: y mandatory;
+  }
+
+  .occupation-suggestions li {
+    padding: 15px 10px;
+    scroll-snap-align: start;
   }
 }
 
@@ -377,15 +398,4 @@ pre {
 
 .car-option + .car-option {
   margin-top: 15px;
-}
-
-@media (max-width: 600px) {
-  .occupation-input-container input:focus + .occupation-suggestions,
-  .occupation-input-container input:not(:placeholder-shown) + .occupation-suggestions {
-    display: block;
-  }
-
-  .occupation-suggestions {
-    display: none;
-  }
 }
