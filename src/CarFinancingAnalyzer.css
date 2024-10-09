@@ -7,10 +7,11 @@
 }
 
 body {
-  font-family: Arial, sans-serif;
+  font-family: 'Heebo', Arial, sans-serif;
   line-height: 1.6;
   background-color: #f4f4f4;
   color: #333;
+  direction: rtl;
 }
 
 .analyzer-container {
@@ -18,15 +19,15 @@ body {
   margin: 20px auto;
   padding: 20px;
   background-color: #fff;
-  border-radius: 10px;
-  box-shadow: 0 0 10px rgba(0,0,0,0.1);
+  border-radius: 15px;
+  box-shadow: 0 0 20px rgba(0,0,0,0.1);
 }
 
 h1 {
   text-align: center;
   color: #2c3e50;
   margin-bottom: 30px;
-  font-size: 24px;
+  font-size: 28px;
 }
 
 .input-group {
@@ -40,17 +41,18 @@ input,
 select, 
 .react-datepicker-wrapper {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
   font-size: 16px;
+  transition: all 0.3s ease;
 }
 
 input:focus, 
 select:focus {
   outline: none;
   border-color: #3498db;
-  box-shadow: 0 0 5px rgba(52,152,219,0.5);
+  box-shadow: 0 0 10px rgba(52,152,219,0.3);
 }
 
 .occupation-input-container {
@@ -60,99 +62,140 @@ select:focus {
 .occupation-suggestions {
   position: absolute;
   top: 100%;
-  left: 0;
   right: 0;
+  left: 0;
   background-color: #fff;
-  border: 1px solid #ddd;
+  border: 2px solid #3498db;
   border-top: none;
-  border-radius: 0 0 5px 5px;
+  border-radius: 0 0 10px 10px;
   max-height: 200px;
   overflow-y: auto;
   z-index: 1000;
+  box-shadow: 0 5px 10px rgba(0,0,0,0.1);
 }
 
 .occupation-suggestions li {
-  padding: 10px;
+  padding: 12px 15px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
 .occupation-suggestions li:hover {
-  background-color: #f0f0f0;
+  background-color: #ecf0f1;
 }
 
 .radio-group {
   display: flex;
   justify-content: space-around;
-  background-color: #f9f9f9;
+  background-color: #ecf0f1;
   padding: 15px;
-  border-radius: 5px;
+  border-radius: 10px;
 }
 
 .radio-group label {
   display: flex;
   align-items: center;
   cursor: pointer;
+  font-size: 16px;
 }
 
 .radio-group input[type="radio"] {
-  margin-right: 8px;
+  margin-left: 10px;
+  width: 20px;
+  height: 20px;
 }
 
 button {
   width: 100%;
-  padding: 12px;
+  padding: 15px;
   background-color: #3498db;
   color: #fff;
   border: none;
-  border-radius: 5px;
-  font-size: 16px;
+  border-radius: 10px;
+  font-size: 18px;
   cursor: pointer;
-  transition: background-color 0.3s;
+  transition: background-color 0.3s, transform 0.1s;
 }
 
 button:hover {
   background-color: #2980b9;
 }
 
+button:active {
+  transform: scale(0.98);
+}
+
 .analysis-result {
   margin-top: 30px;
   padding: 20px;
-  background-color: #f9f9f9;
-  border-radius: 5px;
+  background-color: #ecf0f1;
+  border-radius: 15px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
 }
 
 .car-recommendations {
   display: flex;
   flex-direction: column;
-  gap: 20px;
+  gap: 25px;
 }
 
 .car-option {
   background-color: #fff;
-  padding: 15px;
-  border-radius: 5px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+  padding: 20px;
+  border-radius: 12px;
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+  transition: transform 0.3s ease;
+}
+
+.car-option:hover {
+  transform: translateY(-5px);
 }
 
 .car-option h4 {
-  margin-bottom: 10px;
+  margin-bottom: 15px;
   color: #2c3e50;
+  font-size: 20px;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 10px;
 }
 
 .car-option ul {
   list-style-type: none;
-  padding-left: 0;
+  padding-right: 0;
 }
 
 .car-option li {
-  margin-bottom: 5px;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.car-option li::before {
+  content: '⭐';
+  margin-left: 10px;
+  color: #f1c40f;
 }
 
 .error-message {
   color: #e74c3c;
   font-size: 14px;
   margin-top: 5px;
+}
+
+pre {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  overflow-wrap: break-word;
+  max-width: 100%;
+  font-family: 'Heebo', Arial, sans-serif;
+  font-size: 14px;
+  line-height: 1.6;
+  text-align: right;
+  direction: rtl;
+  background-color: #f8f9fa;
+  padding: 15px;
+  border-radius: 8px;
+  border: 1px solid #e9ecef;
 }
 
 @media (max-width: 600px) {
@@ -162,7 +205,7 @@ button:hover {
   }
 
   h1 {
-    font-size: 20px;
+    font-size: 24px;
   }
 
   .input-group {
@@ -172,8 +215,8 @@ button:hover {
   input, 
   select, 
   .react-datepicker-wrapper {
-    padding: 10px;
-    font-size: 14px;
+    padding: 12px;
+    font-size: 16px;
   }
 
   .radio-group {
@@ -186,23 +229,23 @@ button:hover {
   }
 
   button {
-    padding: 10px;
-    font-size: 14px;
+    padding: 12px;
+    font-size: 16px;
   }
 
   .car-option {
-    padding: 10px;
+    padding: 15px;
   }
 }
 
 /* Animations */
 @keyframes fadeIn {
-  from { opacity: 0; }
-  to { opacity: 1; }
+  from { opacity: 0; transform: translateY(20px); }
+  to { opacity: 1; transform: translateY(0); }
 }
 
 .analysis-result {
-  animation: fadeIn 0.5s ease-in;
+  animation: fadeIn 0.5s ease-out;
 }
 
 /* Improved styling for DatePicker */
@@ -216,9 +259,9 @@ button:hover {
 
 .react-datepicker__input-container input {
   width: 100%;
-  padding: 12px;
-  border: 1px solid #ddd;
-  border-radius: 5px;
+  padding: 15px;
+  border: 2px solid #ddd;
+  border-radius: 10px;
   font-size: 16px;
 }
 
@@ -226,30 +269,32 @@ button:hover {
 .main-car h4, 
 .other-cars h4 {
   color: #3498db;
-  border-bottom: 2px solid #3498db;
-  padding-bottom: 10px;
-  margin-bottom: 15px;
+  font-size: 22px;
+  margin-bottom: 20px;
 }
 
 .car-option p {
   cursor: pointer;
   color: #3498db;
   font-weight: bold;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .car-option p::after {
-  content: ' ▼';
-  font-size: 12px;
+  content: '🔽';
+  font-size: 16px;
 }
 
 .car-option.expanded p::after {
-  content: ' ▲';
+  content: '🔼';
 }
 
 .car-details {
-  margin-top: 10px;
-  padding-top: 10px;
-  border-top: 1px solid #ddd;
+  margin-top: 15px;
+  padding-top: 15px;
+  border-top: 2px solid #ecf0f1;
 }
 
 /* Spinner for loading state */
@@ -266,4 +311,57 @@ button:hover {
 @keyframes spin {
   0% { transform: rotate(0deg); }
   100% { transform: rotate(360deg); }
+}
+
+/* Emoji for car features */
+.car-feature {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.car-feature::before {
+  content: '🚗';
+  margin-left: 10px;
+  font-size: 20px;
+}
+
+/* Attractive design for additional options */
+.other-cars {
+  background-color: #f9f9f9;
+  padding: 20px;
+  border-radius: 12px;
+  margin-top: 30px;
+}
+
+.other-cars h4 {
+  text-align: center;
+  color: #2c3e50;
+  margin-bottom: 20px;
+}
+
+.other-car-option {
+  background-color: #fff;
+  padding: 15px;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  transition: all 0.3s ease;
+  cursor: pointer;
+}
+
+.other-car-option:hover {
+  transform: scale(1.03);
+  box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+}
+
+.other-car-option h5 {
+  color: #3498db;
+  margin-bottom: 10px;
+  display: flex;
+  align-items: center;
+}
+
+.other-car-option h5::before {
+  content: '🚘';
+  margin-left: 10px;
 }
