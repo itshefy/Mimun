@@ -74,14 +74,13 @@ select:focus {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.occupation-suggestion {
+.occupation-suggestions li {
   padding: 8px 10px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-.occupation-suggestion:hover,
-.occupation-suggestion:focus {
+.occupation-suggestions li:hover {
   background-color: #ecf0f1;
 }
 
