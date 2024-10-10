@@ -74,13 +74,14 @@ select:focus {
   box-shadow: 0 2px 5px rgba(0,0,0,0.1);
 }
 
-.occupation-suggestions li {
+.occupation-suggestion {
   padding: 8px 10px;
   cursor: pointer;
   transition: background-color 0.3s;
 }
 
-.occupation-suggestions li:hover {
+.occupation-suggestion:hover,
+.occupation-suggestion:focus {
   background-color: #ecf0f1;
 }
 
@@ -401,4 +402,32 @@ pre {
 
 .car-option + .car-option {
   margin-top: 15px;
+}
+
+/* סגנון חדש לשדה התקציב */
+input[type="number"] {
+  -moz-appearance: textfield;
+}
+
+input[type="number"]::-webkit-outer-spin-button,
+input[type="number"]::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
+}
+
+.budget-input {
+  position: relative;
+}
+
+.budget-input::before {
+  content: '₪';
+  position: absolute;
+  left: 10px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: #888;
+}
+
+.budget-input input {
+  padding-left: 25px;
 }
