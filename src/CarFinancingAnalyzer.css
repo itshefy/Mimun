@@ -431,3 +431,215 @@ input[type="number"]::-webkit-inner-spin-button {
 .budget-input input {
   padding-left: 25px;
 }
+
+/* סגנון למחוון טווח מחירים */
+.price-range-slider {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  margin-top: 10px;
+}
+
+.price-range-slider label {
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.price-range-slider input[type="range"] {
+  width: 100%;
+  margin-top: 5px;
+}
+
+.price-range-slider span {
+  margin-top: 5px;
+  font-weight: bold;
+}
+
+/* סגנון לבחירת סוג דלק */
+.fuel-type-select {
+  margin-top: 10px;
+}
+
+.fuel-type-select label {
+  display: block;
+  margin-bottom: 5px;
+  font-weight: bold;
+}
+
+.fuel-type-select select {
+  width: 100%;
+  padding: 8px;
+  border-radius: 5px;
+  border: 1px solid #ddd;
+}
+
+/* Additional styles for better responsiveness and user experience */
+@media (max-width: 480px) {
+  .analyzer-container {
+    padding: 10px;
+  }
+
+  h1 {
+    font-size: 18px;
+  }
+
+  .input-group {
+    gap: 8px;
+  }
+
+  input, 
+  select, 
+  .react-datepicker-wrapper {
+    padding: 8px;
+    font-size: 12px;
+  }
+
+  .radio-group label {
+    font-size: 12px;
+  }
+
+  button {
+    padding: 8px;
+    font-size: 14px;
+  }
+
+  .car-option h4 {
+    font-size: 16px;
+  }
+
+  .car-option li {
+    font-size: 12px;
+  }
+
+  pre {
+    font-size: 10px;
+  }
+}
+
+/* Improved accessibility styles */
+input:focus,
+select:focus,
+button:focus {
+  outline: 2px solid #3498db;
+  outline-offset: 2px;
+}
+
+.occupation-suggestion:focus {
+  background-color: #e8e8e8;
+  outline: none;
+}
+
+/* Animation for loading state */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.5; }
+  100% { opacity: 1; }
+}
+
+button:disabled {
+  background-color: #95a5a6;
+  cursor: not-allowed;
+  animation: pulse 1.5s infinite;
+}
+
+/* Improved styles for error messages */
+.error-message {
+  background-color: #ffecec;
+  border: 1px solid #f5aca6;
+  border-radius: 3px;
+  padding: 5px;
+  margin-top: 5px;
+  font-size: 12px;
+}
+
+/* Style for the reset form button */
+button.reset-form {
+  background-color: #e74c3c;
+  margin-top: 15px;
+}
+
+button.reset-form:hover {
+  background-color: #c0392b;
+}
+
+/* Improved styles for car recommendations */
+.car-recommendations {
+  background-color: #f9f9f9;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 20px;
+}
+
+.main-car,
+.other-cars {
+  background-color: #ffffff;
+  border-radius: 8px;
+  padding: 15px;
+  margin-bottom: 15px;
+  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+}
+
+.main-car h4,
+.other-cars h4 {
+  color: #2c3e50;
+  border-bottom: 2px solid #3498db;
+  padding-bottom: 5px;
+  margin-bottom: 10px;
+}
+
+/* Style for the generated script */
+.generated-script {
+  background-color: #f0f8ff;
+  border: 1px solid #b0d4ff;
+  border-radius: 8px;
+  padding: 15px;
+  margin-top: 20px;
+  font-style: italic;
+  line-height: 1.6;
+}
+
+/* Tooltip styles */
+.tooltip {
+  position: relative;
+  display: inline-block;
+  cursor: help;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  width: 200px;
+  background-color: #555;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 5px;
+  position: absolute;
+  z-index: 1;
+  bottom: 125%;
+  left: 50%;
+  margin-left: -100px;
+  opacity: 0;
+  transition: opacity 0.3s;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+  opacity: 1;
+}
+
+/* Print styles */
+@media print {
+  .analyzer-container {
+    box-shadow: none;
+  }
+
+  button,
+  .input-group,
+  .occupation-suggestions {
+    display: none;
+  }
+
+  .analysis-result {
+    page-break-inside: avoid;
+  }
+}
