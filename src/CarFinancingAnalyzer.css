@@ -180,7 +180,7 @@ button:active {
 }
 
 .error-message {
-  color: #e74c3c;
+  color:#e74c3c;
   font-size: 12px;
   margin-top: 3px;
 }
@@ -473,63 +473,62 @@ input[type="number"]::-webkit-inner-spin-button {
   border: 1px solid #ddd;
 }
 
-/* Additional styles for better responsiveness and user experience */
-@media (max-width: 480px) {
-  .analyzer-container {
-    padding: 10px;
+/* תיקון לבעיית החץ בשדות הבחירה */
+select {
+  appearance: none;
+  -webkit-appearance: none;
+  -moz-appearance: none;
+  background-image: url("data:image/svg+xml;utf8,<svg fill='black' height='24' viewBox='0 0 24 24' width='24' xmlns='http://www.w3.org/2000/svg'><path d='M7 10l5 5 5-5z'/><path d='M0 0h24v24H0z' fill='none'/></svg>");
+  background-repeat: no-repeat;
+  background-position-x: 5px;
+  background-position-y: 50%;
+  padding-left: 30px;
+}
+
+/* תיקון לבעיית הצגת הצעות המקצוע בטלפון */
+@media (max-width: 600px) {
+  .occupation-suggestions {
+    position: fixed;
+    top: auto;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    max-height: 40vh;
+    overflow-y: auto;
+    background-color: #fff;
+    border-top: 1px solid #ddd;
+    box-shadow: 0 -2px 10px rgba(0,0,0,0.1);
+    z-index: 1000;
   }
 
-  h1 {
-    font-size: 18px;
+  .occupation-suggestion {
+    padding: 10px 15px;
+    border-bottom: 1px solid #eee;
   }
 
-  .input-group {
-    gap: 8px;
-  }
-
-  input, 
-  select, 
-  .react-datepicker-wrapper {
-    padding: 8px;
-    font-size: 12px;
-  }
-
-  .radio-group label {
-    font-size: 12px;
-  }
-
-  button {
-    padding: 8px;
-    font-size: 14px;
-  }
-
-  .car-option h4 {
-    font-size: 16px;
-  }
-
-  .car-option li {
-    font-size: 12px;
-  }
-
-  pre {
-    font-size: 10px;
+  .occupation-suggestion:last-child {
+    border-bottom: none;
   }
 }
 
-/* Improved accessibility styles */
+/* שיפור נגישות ומראה כללי */
+button:focus,
 input:focus,
 select:focus,
-button:focus {
+.occupation-suggestion:focus {
   outline: 2px solid #3498db;
   outline-offset: 2px;
 }
 
-.occupation-suggestion:focus {
-  background-color: #e8e8e8;
-  outline: none;
+.error-message {
+  background-color: #ffecec;
+  border: 1px solid #f5aca6;
+  border-radius: 3px;
+  padding: 5px;
+  margin-top: 5px;
 }
 
-/* Animation for loading state */
+/* הנפשה לטעינה */
 @keyframes pulse {
   0% { opacity: 1; }
   50% { opacity: 0.5; }
@@ -540,106 +539,4 @@ button:disabled {
   background-color: #95a5a6;
   cursor: not-allowed;
   animation: pulse 1.5s infinite;
-}
-
-/* Improved styles for error messages */
-.error-message {
-  background-color: #ffecec;
-  border: 1px solid #f5aca6;
-  border-radius: 3px;
-  padding: 5px;
-  margin-top: 5px;
-  font-size: 12px;
-}
-
-/* Style for the reset form button */
-button.reset-form {
-  background-color: #e74c3c;
-  margin-top: 15px;
-}
-
-button.reset-form:hover {
-  background-color: #c0392b;
-}
-
-/* Improved styles for car recommendations */
-.car-recommendations {
-  background-color: #f9f9f9;
-  border-radius: 8px;
-  padding: 15px;
-  margin-top: 20px;
-}
-
-.main-car,
-.other-cars {
-  background-color: #ffffff;
-  border-radius: 8px;
-  padding: 15px;
-  margin-bottom: 15px;
-  box-shadow: 0 2px 5px rgba(0,0,0,0.1);
-}
-
-.main-car h4,
-.other-cars h4 {
-  color: #2c3e50;
-  border-bottom: 2px solid #3498db;
-  padding-bottom: 5px;
-  margin-bottom: 10px;
-}
-
-/* Style for the generated script */
-.generated-script {
-  background-color: #f0f8ff;
-  border: 1px solid #b0d4ff;
-  border-radius: 8px;
-  padding: 15px;
-  margin-top: 20px;
-  font-style: italic;
-  line-height: 1.6;
-}
-
-/* Tooltip styles */
-.tooltip {
-  position: relative;
-  display: inline-block;
-  cursor: help;
-}
-
-.tooltip .tooltiptext {
-  visibility: hidden;
-  width: 200px;
-  background-color: #555;
-  color: #fff;
-  text-align: center;
-  border-radius: 6px;
-  padding: 5px;
-  position: absolute;
-  z-index: 1;
-  bottom: 125%;
-  left: 50%;
-  margin-left: -100px;
-  opacity: 0;
-  transition: opacity 0.3s;
-}
-
-.tooltip:hover .tooltiptext {
-  visibility: visible;
-  opacity: 1;
-}
-
-/* Print styles */
-@media print {
-  .analyzer-container {
-    box-shadow: none;
-  }
-
-  button,
-  .input-group,
-  .occupation-suggestions {
-    display: none;
-  }
-
-  .analysis-result {
-    page-break-inside: avoid;
-  }
 }
