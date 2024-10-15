@@ -243,7 +243,7 @@ const CarFinancingConversationAnalyzer = () => {
         { name: 'פורד F-150 היברידי', price: 280000, features: ['עוצמה גבוהה', 'חסכוני בדלק', 'יכולות גרירה מרשימות', 'טכנולוגיה מתקדמת', 'תא נהג מפנק'], description: 'פורד F-150 היברידי מציע שילוב של עוצמה גבוהה וחסכוניות בדלק. הוא מצטיין ביכולות גרירה מרשימות, טכנולוגיה מתקדמת ותא נהג מפנק.' },
         { name: 'RAM 1500 eTorque', price: 270000, features: ['מערכת eTorque חדשנית', 'ביצועים משופרים', 'חסכוני בדלק', 'נוחות נסיעה גבוהה', 'יכולות העמסה מרשימות'], description: 'RAM 1500 eTorque מציע מערכת היברידית קלה וחדשנית. הוא מתאפיין בביצועים משופרים, חסכוניות בדלק, נוחות נסיעה גבוהה ויכולות העמסה מרשימות.' },
         { name: 'שברולט סילברדו היברידי', price: 260000, features: ['טכנולוגיה היברידית מתקדמת', 'חסכוני בדלק', 'ביצועים חזקים', 'תא נוסעים מרווח', 'יכולות גרירה גבוהות'], description: 'שברולט סילברדו היברידי משלב טכנולוגיה היברידית מתקדמת עם ביצועים חזקים. הוא חסכוני בדלק, מציע תא נוסעים מרווח ויכולות גרירה גבוהות.' },
-        { name: 'GMC סיירה היברידי', price: 275000, features: ['עיצוב יוקרתי', 'טכנולוגיה היברידית חדשנית', 'צריכת דלק משופרת', 'נוחות נסיעה גבוהה', 'יכולות שטח מרשימות'], description: 'GMC סיירה היברידי מציע עיצוב יוקרתי וטכנולוגיה היברידית חדשנית. הוא מצטיין בצריכת דלק משופרת, נוחות נסיעה גבוהה ויכולות שטח מרשימות.' }
+        { name: 'GMC סיירה היברידי', price: 275000, features: ['עיצוב יוקרתי', 'טכנולוגיה היברידית חדשנית', 'צריכת דלק משופרת', 'נוחות נסיעה גבוהה', 'יכולות שטח מרשימות'], { name: 'GMC סיירה היברידי', price: 275000, features: ['עיצוב יוקרתי', 'טכנולוגיה היברידית חדשנית', 'צריכת דלק משופרת', 'נוחות נסיעה גבוהה', 'יכולות שטח מרשימות'], description: 'GMC סיירה היברידי מציע עיצוב יוקרתי וטכנולוגיה היברידית חדשנית. הוא מצטיין בצריכת דלק משופרת, נוחות נסיעה גבוהה ויכולות שטח מרשימות.' }
       ],
       'חשמלי': [
         { name: 'ריביאן R1T', price: 350000, features: ['טווח נסיעה ארוך', 'ביצועים מרשימים', 'יכולות שטח מעולות', 'טכנולוגיה חדשנית', 'עיצוב ייחודי'], description: 'ריביאן R1T הוא טנדר חשמלי חדשני עם טווח נסיעה ארוך וביצועים מרשימים. הוא מציע יכולות שטח מעולות, טכנולוגיה חדשנית ועיצוב ייחודי.' },
@@ -620,344 +620,345 @@ const CarFinancingConversationAnalyzer = () => {
     };
   };
 
-  const [firstName, setFirstName] = useState('');
-  const [lastName, setLastName] = useState('');
-  const [birthdate, setBirthdate] = useState(null);
-  const [birthdateInput, setBirthdateInput] = useState('');
-  const [age, setAge] = useState('');
-  const [occupation, setOccupation] = useState('');
-  const [carType, setCarType] = useState('');
-  const [isNew, setIsNew] = useState(true);
-  const [analysis, setAnalysis] = useState(null);
-  const [expandedCar, setExpandedCar] = useState(null);
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [showOccupationSuggestions, setShowOccupationSuggestions] = useState(false);
-  const [filteredOccupations, setFilteredOccupations] = useState([]);
-  const [budget, setBudget] = useState('');
-  const [fuelType, setFuelType] = useState('');
-  const [priceRange, setPriceRange] = useState([0, 1000000]);
+  const CarFinancingConversationAnalyzer = () => {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
+    const [birthdate, setBirthdate] = useState(null);
+    const [birthdateInput, setBirthdateInput] = useState('');
+    const [age, setAge] = useState('');
+    const [occupation, setOccupation] = useState('');
+    const [carType, setCarType] = useState('');
+    const [isNew, setIsNew] = useState(true);
+    const [analysis, setAnalysis] = useState(null);
+    const [expandedCar, setExpandedCar] = useState(null);
+    const [errors, setErrors] = useState({});
+    const [isLoading, setIsLoading] = useState(false);
+    const [showOccupationSuggestions, setShowOccupationSuggestions] = useState(false);
+    const [filteredOccupations, setFilteredOccupations] = useState([]);
+    const [budget, setBudget] = useState('');
+    const [fuelType, setFuelType] = useState('');
+    const [priceRange, setPriceRange] = useState([0, 1000000]);
 
-  const occupationInputRef = useRef(null);
+    const occupationInputRef = useRef(null);
 
-  useEffect(() => {
-    if (birthdate) {
-      const today = new Date();
-      let calculatedAge = today.getFullYear() - birthdate.getFullYear();
-      const m = today.getMonth() - birthdate.getMonth();
-      if (m < 0 || (m === 0 && today.getDate() < birthdate.getDate())) {
-        calculatedAge--;
+    useEffect(() => {
+      if (birthdate) {
+        const today = new Date();
+        let calculatedAge = today.getFullYear() - birthdate.getFullYear();
+        const m = today.getMonth() - birthdate.getMonth();
+        if (m < 0 || (m === 0 && today.getDate() < birthdate.getDate())) {
+          calculatedAge--;
+        }
+        setAge(calculatedAge.toString());
       }
-      setAge(calculatedAge.toString());
-    }
-  }, [birthdate]);
+    }, [birthdate]);
 
-  const handleBirthdateChange = (e) => {
-    let value = e.target.value.replace(/\D/g, '');
-    if (value.length > 8) value = value.slice(0, 8);
-    
-    if (value.length > 4) {
-      value = `${value.slice(0, 2)}/${value.slice(2, 4)}/${value.slice(4)}`;
-    } else if (value.length > 2) {
-      value = `${value.slice(0, 2)}/${value.slice(2)}`;
-    }
-    
-    setBirthdateInput(value);
-    
-    if (value.length === 10) {
-      const [day, month, year] = value.split('/');
-      const date = new Date(year, month - 1, day);
-      if (date instanceof Date && !isNaN(date)) {
-        setBirthdate(date);
+    const handleBirthdateChange = (e) => {
+      let value = e.target.value.replace(/\D/g, '');
+      if (value.length > 8) value = value.slice(0, 8);
+      
+      if (value.length > 4) {
+        value = `${value.slice(0, 2)}/${value.slice(2, 4)}/${value.slice(4)}`;
+      } else if (value.length > 2) {
+        value = `${value.slice(0, 2)}/${value.slice(2)}`;
       }
-    } else {
-      setBirthdate(null);
-    }
-  };
+      
+      setBirthdateInput(value);
+      
+      if (value.length === 10) {
+        const [day, month, year] = value.split('/');
+        const date = new Date(year, month - 1, day);
+        if (date instanceof Date && !isNaN(date)) {
+          setBirthdate(date);
+        }
+      } else {
+        setBirthdate(null);
+      }
+    };
 
-  const handleOccupationChange = (e) => {
-    const value = e.target.value;
-    setOccupation(value);
-    
-    if (value.length > 0) {
-      const matchingOccupations = occupations.filter(occ => 
-        occ.toLowerCase().includes(value.toLowerCase())
-      );
-      setFilteredOccupations(matchingOccupations);
-      setShowOccupationSuggestions(true);
-    } else {
+    const handleOccupationChange = (e) => {
+      const value = e.target.value;
+      setOccupation(value);
+      
+      if (value.length > 0) {
+        const matchingOccupations = occupations.filter(occ => 
+          occ.toLowerCase().includes(value.toLowerCase())
+        );
+        setFilteredOccupations(matchingOccupations);
+        setShowOccupationSuggestions(true);
+      } else {
+        setShowOccupationSuggestions(false);
+      }
+    };
+
+    const selectOccupation = (selectedOccupation) => {
+      setOccupation(selectedOccupation);
       setShowOccupationSuggestions(false);
-    }
-  };
+    };
 
-  const selectOccupation = (selectedOccupation) => {
-    setOccupation(selectedOccupation);
-    setShowOccupationSuggestions(false);
-  };
-
-  const handleOccupationKeyDown = (e, selectedOccupation) => {
-    if (e.key === 'Enter' || e.key === ' ') {
-      e.preventDefault();
-      selectOccupation(selectedOccupation);
-    }
-  };
-
-  const validateForm = () => {
-    let errors = {};
-    if (!firstName.trim()) errors.firstName = 'שם פרטי הוא שדה חובה';
-    if (!lastName.trim()) errors.lastName = 'שם משפחה הוא שדה חובה';
-    if (!occupation.trim()) errors.occupation = 'מקצוע הוא שדה חובה';
-    if (!carType) errors.carType = 'סוג רכב הוא שדה חובה';
-    if (!birthdate) errors.birthdate = 'תאריך לידה הוא שדה חובה';
-    if (!fuelType) errors.fuelType = 'סוג דלק הוא שדה חובה';
-
-    if (birthdate) {
-      const calculatedAge = parseInt(age);
-      if (calculatedAge < 18 || calculatedAge > 80) {
-        errors.birthdate = 'גיל חייב להיות בין 18 ל-80';
+    const handleOccupationKeyDown = (e, selectedOccupation) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        selectOccupation(selectedOccupation);
       }
-    }
+    };
 
-    setErrors(errors);
-    return Object.keys(errors).length === 0;
-  };
+    const validateForm = () => {
+      let errors = {};
+      if (!firstName.trim()) errors.firstName = 'שם פרטי הוא שדה חובה';
+      if (!lastName.trim()) errors.lastName = 'שם משפחה הוא שדה חובה';
+      if (!occupation.trim()) errors.occupation = 'מקצוע הוא שדה חובה';
+      if (!carType) errors.carType = 'סוג רכב הוא שדה חובה';
+      if (!birthdate) errors.birthdate = 'תאריך לידה הוא שדה חובה';
+      if (!fuelType) errors.fuelType = 'סוג דלק הוא שדה חובה';
 
-  const analyzeAndCreateScript = async () => {
-    if (!validateForm()) return;
+      if (birthdate) {
+        const calculatedAge = parseInt(age);
+        if (calculatedAge < 18 || calculatedAge > 80) {
+          errors.birthdate = 'גיל חייב להיות בין 18 ל-80';
+        }
+      }
 
-    setIsLoading(true);
-    
-    // סימולציה של פעולה אסינכרונית
-    await new Promise(resolve => setTimeout(resolve, 1500));
+      setErrors(errors);
+      return Object.keys(errors).length === 0;
+    };
 
-    console.log('קריאה ל-generateScript עם הפרמטרים:', {
-      firstName,
-      lastName,
-      age: parseInt(age) || 30,
-      occupation,
-      carType,
-      isNew,
-      birthdate: birthdate.toLocaleDateString('he-IL'),
-      budget: priceRange[1],
-      fuelType
-    });
+    const analyzeAndCreateScript = async () => {
+      if (!validateForm()) return;
 
-    const script = generateScript(
-      firstName,
-      lastName,
-      parseInt(age) || 30,
-      occupation,
-      carType,
-      isNew,
-      birthdate.toLocaleDateString('he-IL'),
-      priceRange[1],
-      fuelType
-    );
-    
-    const personalityTraits = getPersonalityTraits(occupation);
-    const { cars: recommendedCars, minPrice, maxPrice } = getRecommendedCars(carType, isNew, personalityTraits, priceRange[1], fuelType, carDatabase);
-    
-    setAnalysis({ 
-      conversationScript: script,
-      mainCar: recommendedCars.length > 0 ? recommendedCars[0] : null,
-      otherCars: recommendedCars.slice(1, 3),
-      priceRange: { min: minPrice, max: maxPrice }
-    });
+      setIsLoading(true);
+      
+      // סימולציה של פעולה אסינכרונית
+      await new Promise(resolve => setTimeout(resolve, 1500));
 
-    setIsLoading(false);
-  };
+      console.log('קריאה ל-generateScript עם הפרמטרים:', {
+        firstName,
+        lastName,
+        age: parseInt(age) || 30,
+        occupation,
+        carType,
+        isNew,
+        birthdate: birthdate.toLocaleDateString('he-IL'),
+        budget: priceRange[1],
+        fuelType
+      });
 
-  const resetForm = () => {
-    setFirstName('');
-    setLastName('');
-    setBirthdate(null);
-    setBirthdateInput('');
-    setAge('');
-    setOccupation('');
-    setCarType('');
-    setIsNew(true);
-    setAnalysis(null);
-    setExpandedCar(null);
-    setErrors({});
-    setBudget('');
-    setFuelType('');
-    setPriceRange([0, 1000000]);
-  };
+      const script = generateScript(
+        firstName,
+        lastName,
+        parseInt(age) || 30,
+        occupation,
+        carType,
+        isNew,
+        birthdate.toLocaleDateString('he-IL'),
+        priceRange[1],
+        fuelType
+      );
+      
+      const personalityTraits = getPersonalityTraits(occupation);
+      const { cars: recommendedCars, minPrice, maxPrice } = getRecommendedCars(carType, isNew, personalityTraits, priceRange[1], fuelType, carDatabase);
+      
+      setAnalysis({ 
+        conversationScript: script,
+        mainCar: recommendedCars.length > 0 ? recommendedCars[0] : null,
+        otherCars: recommendedCars.slice(1, 3),
+        priceRange: { min: minPrice, max: maxPrice }
+      });
 
-  const toggleCarDetails = (carName) => {
-    setExpandedCar(expandedCar === carName ? null : carName);
-  };
+      setIsLoading(false);
+    };
 
-  const handleKeyPress = (e) => {
-    if (e.key === 'Enter') {
-      analyzeAndCreateScript();
-    }
-  };
+    const resetForm = () => {
+      setFirstName('');
+      setLastName('');
+      setBirthdate(null);
+      setBirthdateInput('');
+      setAge('');
+      setOccupation('');
+      setCarType('');
+      setIsNew(true);
+      setAnalysis(null);
+      setExpandedCar(null);
+      setErrors({});
+      setBudget('');
+      setFuelType('');
+      setPriceRange([0, 1000000]);
+    };
 
-  return (
-    <div className="analyzer-container">
-      <h1>מנתח שיחת מימון ומכירת רכב מתקדם</h1>
-      <div className="input-group">
-        <input 
-          type="text" 
-          placeholder="שם פרטי" 
-          value={firstName} 
-          onChange={(e) => setFirstName(e.target.value)}
-          onKeyPress={handleKeyPress}
-          className={errors.firstName ? 'error' : ''}
-        />
-        {errors.firstName && <span className="error-message">{errors.firstName}</span>}
+    const toggleCarDetails = (carName) => {
+      setExpandedCar(expandedCar === carName ? null : carName);
+    };
 
-        <input 
-          type="text" 
-          placeholder="שם משפחה" 
-          value={lastName} 
-          onChange={(e) => setLastName(e.target.value)}
-          onKeyPress={handleKeyPress}
-          className={errors.lastName ? 'error' : ''}
-        />
-        {errors.lastName && <span className="error-message">{errors.lastName}</span>}
+    const handleKeyPress = (e) => {
+      if (e.key === 'Enter') {
+        analyzeAndCreateScript();
+      }
+    };
 
-        <input
-          type="text"
-          placeholder="תאריך לידה (DD/MM/YYYY)"
-          value={birthdateInput}
-          onChange={handleBirthdateChange}
-          onKeyPress={handleKeyPress}
-          className={errors.birthdate ? 'error' : ''}
-        />
-        {errors.birthdate && <span className="error-message">{errors.birthdate}</span>}
-
-        <div className="occupation-input-container">
+    return (
+      <div className="analyzer-container">
+        <h1>מנתח שיחת מימון ומכירת רכב מתקדם</h1>
+        <div className="input-group">
           <input 
             type="text" 
-            placeholder="מקצוע" 
-            value={occupation} 
-            onChange={handleOccupationChange}
-            onFocus={() => setShowOccupationSuggestions(true)}
-            className={errors.occupation ? 'error' : ''}
+            placeholder="שם פרטי" 
+            value={firstName} 
+            onChange={(e) => setFirstName(e.target.value)}
+            onKeyPress={handleKeyPress}
+            className={errors.firstName ? 'error' : ''}
           />
-          {errors.occupation && <span className="error-message">{errors.occupation}</span>}
-          {showOccupationSuggestions && (
-            <div className="occupation-suggestions">
-              {filteredOccupations.map((occ, index) => (
-                <div 
-                  key={occ} 
-                  className="occupation-suggestion"
-                  onClick={() => selectOccupation(occ)}
-                  tabIndex={0}
-                  onKeyDown={(e) => handleOccupationKeyDown(e, occ)}
-                >
-                  {occ}
-                </div>
-              ))}
-            </div>
-          )}
-        </div>
+          {errors.firstName && <span className="error-message">{errors.firstName}</span>}
 
-        <select 
-          value={carType} 
-          onChange={(e) => setCarType(e.target.value)}
-          onKeyPress={handleKeyPress}
-          className={errors.carType ? 'error' : ''}
-        >
-          <option value="">בחר סוג רכב</option>
-          {carTypes.map(type => <option key={type} value={type}>{type}</option>)}
-        </select>
-        {errors.carType && <span className="error-message">{errors.carType}</span>}
+          <input 
+            type="text" 
+            placeholder="שם משפחה" 
+            value={lastName} 
+            onChange={(e) => setLastName(e.target.value)}
+            onKeyPress={handleKeyPress}
+            className={errors.lastName ? 'error' : ''}
+          />
+          {errors.lastName && <span className="error-message">{errors.lastName}</span>}
 
-        <select 
-          value={fuelType} 
-          onChange={(e) => setFuelType(e.target.value)}
-          onKeyPress={handleKeyPress}
-          className={errors.fuelType ? 'error' : ''}
-        >
-          <option value="">בחר סוג דלק</option>
-          {fuelTypes.map(type => <option key={type} value={type}>{type}</option>)}
-        </select>
-        {errors.fuelType && <span className="error-message">{errors.fuelType}</span>}
-
-        <div className="price-range-slider">
-          <label>טווח מחירים:</label>
           <input
-            type="range"
-            min="0"
-            max="1000000"
-            step="10000"
-            value={priceRange[1]}
-            onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
+            type="text"
+            placeholder="תאריך לידה (DD/MM/YYYY)"
+            value={birthdateInput}
+            onChange={handleBirthdateChange}
+            onKeyPress={handleKeyPress}
+            className={errors.birthdate ? 'error' : ''}
           />
-          <span>{priceRange[1].toLocaleString()} ₪</span>
-        </div>
+          {errors.birthdate && <span className="error-message">{errors.birthdate}</span>}
 
-        <div className="radio-group">
-          <label>
+          <div className="occupation-input-container">
             <input 
-              type="radio" 
-              value="new" 
-              checked={isNew} 
-              onChange={() => setIsNew(true)} 
+              type="text" 
+              placeholder="מקצוע" 
+              value={occupation} 
+              onChange={handleOccupationChange}
+              onFocus={() => setShowOccupationSuggestions(true)}
+              className={errors.occupation ? 'error' : ''}
             />
-            רכב חדש
-          </label>
-          <label>
-            <input 
-              type="radio" 
-              value="used" 
-              checked={!isNew} 
-              onChange={() => setIsNew(false)} 
-            />
-            רכב משומש
-          </label>
-        </div>
-      </div>
-      <button onClick={analyzeAndCreateScript} disabled={isLoading}>
-        {isLoading ? 'מעבד...' : 'צור תסריט שיחה מתקדם'}
-      </button>
-      {analysis && (
-        <div className="analysis-result">
-          <h3>תסריט שיחה מפורט:</h3>
-          <pre>{analysis.conversationScript}</pre>
-          <h3>רכבים מומלצים:</h3>
-          <div className="car-recommendations">
-            {analysis.mainCar && (
-              <div className="main-car">
-                <h4>הרכב המומלץ ביותר:</h4>
-                <p>{analysis.mainCar.name}</p>
-                <ul>
-                  {analysis.mainCar.features.map((feature, idx) => (
-                    <li key={idx}>{feature}</li>
-                  ))}
-                </ul>
-                <p>{analysis.mainCar.description}</p>
+            {errors.occupation && <span className="error-message">{errors.occupation}</span>}
+            {showOccupationSuggestions && (
+              <div className="occupation-suggestions">
+                {filteredOccupations.map((occ, index) => (
+                  <div 
+                    key={occ} 
+                    className="occupation-suggestion"
+                    onClick={() => selectOccupation(occ)}
+                    tabIndex={0}
+                    onKeyDown={(e) => handleOccupationKeyDown(e, occ)}
+                  >
+                    {occ}
+                  </div>
+                ))}
               </div>
             )}
-            <div className="other-cars">
-              <h4>אפשרויות נוספות:</h4>
-              {analysis.otherCars.map((car, index) => (
-                <div key={car.name} className="car-option">
-                  <p onClick={() => toggleCarDetails(car.name)} style={{cursor: 'pointer'}}>
-                    {car.name} {expandedCar === car.name ? '▼' : '►'}
-                  </p>
-                  {expandedCar === car.name && (
-                    <div>
-                      <ul>
-                        {car.features.map((feature, idx) => (
-                          <li key={idx}>{feature}</li>
-                        ))}
-                      </ul>
-                      <p>{car.description}</p>
-                    </div>
-                  )}
-                </div>
-              ))}
-            </div>
           </div>
-          <button onClick={resetForm}>אפס טופס</button>
-        </div>
-      )}
-    </div>
-  );
-};
 
-export default CarFinancingConversationAnalyzer;
+          <select 
+            value={carType} 
+            onChange={(e) => setCarType(e.target.value)}
+            onKeyPress={handleKeyPress}
+            className={errors.carType ? 'error' : ''}
+          >
+            <option value="">בחר סוג רכב</option>
+            {carTypes.map(type => <option key={type} value={type}>{type}</option>)}
+          </select>
+          {errors.carType && <span className="error-message">{errors.carType}</span>}
+
+          <select 
+            value={fuelType} 
+            onChange={(e) => setFuelType(e.target.value)}
+            onKeyPress={handleKeyPress}
+            className={errors.fuelType ? 'error' : ''}
+          >
+            <option value="">בחר סוג דלק</option>
+            {fuelTypes.map(type => <option key={type} value={type}>{type}</option>)}
+          </select>
+          {errors.fuelType && <span className="error-message">{errors.fuelType}</span>}
+
+          <div className="price-range-slider">
+            <label>טווח מחירים:</label>
+            <input
+              type="range"
+              min="0"
+              max="1000000"
+              step="10000"
+              value={priceRange[1]}
+              onChange={(e) => setPriceRange([0, parseInt(e.target.value)])}
+            />
+            <span>{priceRange[1].toLocaleString()} ₪</span>
+          </div>
+
+          <div className="radio-group">
+            <label>
+              <input 
+                type="radio" 
+                value="new" 
+                checked={isNew} 
+                onChange={() => setIsNew(true)} 
+              />
+              רכב חדש
+            </label>
+            <label>
+              <input 
+                type="radio" 
+                value="used" 
+                checked={!isNew} 
+                onChange={() => setIsNew(false)} 
+              />
+              רכב משומש
+            </label>
+          </div>
+        </div>
+        <button onClick={analyzeAndCreateScript} disabled={isLoading}>
+          {isLoading ? 'מעבד...' : 'צור תסריט שיחה מתקדם'}
+        </button>
+        {analysis && (
+          <div className="analysis-result">
+            <h3>תסריט שיחה מפורט:</h3>
+            <pre>{analysis.conversationScript}</pre>
+            <h3>רכבים מומלצים:</h3>
+            <div className="car-recommendations">
+              {analysis.mainCar && (
+                <div className="main-car">
+                  <h4>הרכב המומלץ ביותר:</h4>
+                  <p>{analysis.mainCar.name}</p>
+                  <ul>
+                    {analysis.mainCar.features.map((feature, idx) => (
+                      <li key={idx}>{feature}</li>
+                    ))}
+                  </ul>
+                  <p>{analysis.mainCar.description}</p>
+                </div>
+              )}
+              <div className="other-cars">
+                <h4>אפשרויות נוספות:</h4>
+                {analysis.otherCars.map((car, index) => (
+                  <div key={car.name} className="car-option">
+                    <p onClick={() => toggleCarDetails(car.name)} style={{cursor: 'pointer'}}>
+                      {car.name} {expandedCar === car.name ? '▼' : '►'}
+                    </p>
+                    {expandedCar === car.name && (
+                      <div>
+                        <ul>
+                          {car.features.map((feature, idx) => (
+                            <li key={idx}>{feature}</li>
+                          ))}
+                        </ul>
+                        <p>{car.description}</p>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            </div>
+            <button onClick={resetForm}>אפס טופס</button>
+          </div>
+        )}
+      </div>
+    );
+  };
+
+  export default CarFinancingConversationAnalyzer;
